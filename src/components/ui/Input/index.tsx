@@ -32,7 +32,7 @@ const Input = ({ error, label, textarea = false, ...props }: InputProps) => {
                     {...props}
                     className={`mt-3 block w-full resize-none rounded-lg border-none bg-black py-3 px-3 text-sm/6 text-white
                         focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25
-                        placeholder:text-sm placeholder:font-normal placeholder:text-[#FFFFFF] placeholder:opacity-40 ${props.className}`}
+                        placeholder:text-sm/6 placeholder:font-normal placeholder:text-[#FFFFFF] placeholder:opacity-40 ${props.className}`}
                 />
             )}
             {!!error && <div className="text-error text-base">{error}</div>}

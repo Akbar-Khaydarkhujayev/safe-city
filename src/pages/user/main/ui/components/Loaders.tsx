@@ -2,7 +2,7 @@ import ContentLoader from "react-content-loader";
 
 export function ReleasesLoader() {
     return (
-        <>
+        <div className="flex">
             {[...Array(3)].map((_, index) => (
                 <ContentLoader
                     backgroundColor="transparent"
@@ -21,7 +21,7 @@ export function ReleasesLoader() {
                     />
                 </ContentLoader>
             ))}
-        </>
+        </div>
     );
 }
 

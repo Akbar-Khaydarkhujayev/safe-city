@@ -4,45 +4,56 @@ import ErrorPage from "@/pages/common/error-page";
 import LoginPage from "@/pages/common/login-page";
 import NotFoundPage from "@/pages/common/not-found";
 import UserMainPage from "@/pages/user/main";
-import AdminMainPage from "@/pages/admin/main";
+// import AdminMainPage from "@/pages/admin/main";
 import UserApplicationPage from "@/pages/user/application";
-import AdminMainPage2 from "@/pages/admin/main2";
-import AdminAddAppPage from "@/pages/admin/newApp";
+import AdminMainPage from "@/pages/admin/main";
+import AdminAppFromPage from "@/pages/admin/app-form";
+// import AdminMainPage2 from "@/pages/admin/main2";
+// import AdminAddAppPage from "@/pages/admin/newApp";
 
-export const router = createBrowserRouter([
+const UserRoutes = [
     {
-        path: "/",
-        element: <RootLayout />,
-        errorElement: <ErrorPage />,
-        children: [
-            {
-                index: true,
-                element: <UserMainPage />,
-            },
-            {
-                path: "/app",
-                element: <UserApplicationPage />,
-            },
-            {
-                path: "/login",
-                element: <LoginPage />,
-            },
-            {
-                path: "/admin",
-                element: <AdminMainPage />,
-            },
-            {
-                path: "/admin/next",
-                element: <AdminMainPage2 />,
-            },
-            {
-                path: "/admin/add",
-                element: <AdminAddAppPage />,
-            },
-        ],
+        index: true,
+        element: <UserMainPage />,
     },
     {
-        path: "*",
-        element: <NotFoundPage />,
+        path: "/app",
+        element: <UserApplicationPage />,
     },
-]);
+    {
+        path: "/login",
+        element: <LoginPage />,
+    },
+];
+
+const AdminRoutes = [
+    {
+        index: true,
+        element: <AdminMainPage />,
+    },
+    {
+        path: "/new",
+        element: <AdminMainPage platform />,
+    },
+    {
+        path: "/new/:platform",
+        element: <AdminAppFromPage />,
+    },
+];
+
+export default function createRoutes(
+    auth: boolean
+): ReturnType<typeof createBrowserRouter> {
+    return createBrowserRouter([
+        {
+            path: "/",
+            element: <RootLayout />,
+            errorElement: <ErrorPage />,
+            children: auth ? AdminRoutes : UserRoutes,
+        },
+        {
+            path: "*",
+            element: <NotFoundPage />,
+        },
+    ]);
+}

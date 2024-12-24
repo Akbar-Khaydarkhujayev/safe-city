@@ -1,13 +1,11 @@
-import { dotStream } from "ldrs";
+import { tailChase } from "ldrs";
 
-dotStream.register();
+tailChase.register();
 
 interface LoadingProps {
     size?: string | number;
 }
 
-const Loading = ({ size = 60 }: LoadingProps) => (
-    <l-reuleaux size={size} speed="1.5" color="white"></l-reuleaux>
-);
-
-export default Loading;
+export default function Loading({ size = 28 }: LoadingProps) {
+    return <l-tail-chase size={size} speed="1.75" color="white" />;
+}

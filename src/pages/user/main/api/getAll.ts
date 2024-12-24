@@ -36,7 +36,6 @@ export const useGetApps = () => {
         queryFn: ({ pageParam }) =>
             getApps({ search: debouncedQuery, page: pageParam, limit: 9 }),
         getNextPageParam: (lastPage, allPages) => {
-            console.log(lastPage.length);
             return lastPage.length === 3 ? allPages.length + 1 : undefined;
         },
         initialPageParam: 1,

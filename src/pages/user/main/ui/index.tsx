@@ -76,7 +76,7 @@ const MainPage: React.FC = () => {
 
             {isAppsError && <Error />}
 
-            {isAppsSuccess && apps.pages.length < 1 && <NotFound />}
+            {isAppsSuccess && apps.pages[0].length < 1 && <NotFound />}
 
             <div ref={ref} className="w-full h-1" />
             {isFetchingNextPage && (
