@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UserProvider } from "./context/user";
 import useAuth from "./hooks/useAuth";
 import createRoutes from "./config/router";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -13,6 +14,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
             <UserProvider>
                 <RouterProvider router={createRoutes(auth)} />
+                <Toaster position="top-right" />
             </UserProvider>
         </QueryClientProvider>
     );

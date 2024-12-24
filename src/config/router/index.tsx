@@ -4,10 +4,10 @@ import ErrorPage from "@/pages/common/error-page";
 import LoginPage from "@/pages/common/login-page";
 import NotFoundPage from "@/pages/common/not-found";
 import UserMainPage from "@/pages/user/main";
-// import AdminMainPage from "@/pages/admin/main";
 import UserApplicationPage from "@/pages/user/application";
 import AdminMainPage from "@/pages/admin/main";
 import AdminAppFromPage from "@/pages/admin/app-form";
+// import AdminMainPage from "@/pages/admin/main";
 // import AdminMainPage2 from "@/pages/admin/main2";
 // import AdminAddAppPage from "@/pages/admin/newApp";
 

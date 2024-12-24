@@ -17,25 +17,37 @@ const Input = ({ error, label, textarea = false, ...props }: InputProps) => {
     return (
         <Field>
             {!!label && (
-                <Label className="text-base font-semibold">{label}</Label>
+                <Label className="text-base font-semibold flex gap-1">
+                    {label}
+                    {!!error && (
+                        <div className="text-red-600 text-base ml-1 -mb-2 font-semibold">
+                            ({error})
+                        </div>
+                    )}
+                </Label>
             )}
             {!textarea ? (
                 <HeadlessUiInput
                     {...props}
                     autoComplete="off"
-                    className={`h-[51px] mt-3 block w-full rounded-lg border-none bg-black py-1.5 px-3 text-sm/6 text-white
+                    className={`h-[51px] mt-3 block w-full rounded-lg bg-black py-1.5 px-4 text-sm/6 text-white
                         focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25
-                        placeholder:text-sm placeholder:font-normal placeholder:text-[#FFFFFF] placeholder:opacity-40 ${props.className}`}
+                        placeholder:text-sm placeholder:font-normal placeholder:text-[#FFFFFF] placeholder:opacity-40 ${
+                            props.className
+                        } ${!!error ? "border border-red-600" : "border-none"}`}
                 />
             ) : (
                 <Textarea
                     {...props}
-                    className={`mt-3 block w-full resize-none rounded-lg border-none bg-black py-3 px-3 text-sm/6 text-white
+                    className={`mt-3 block w-full resize-none rounded-lg bg-black py-3 px-4 text-sm/6 text-white
                         focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25
-                        placeholder:text-sm/6 placeholder:font-normal placeholder:text-[#FFFFFF] placeholder:opacity-40 ${props.className}`}
+                        placeholder:text-sm/6 placeholder:font-normal placeholder:text-[#FFFFFF] placeholder:opacity-40 ${
+                            props.className
+                        }  ${
+                        !!error ? "border border-red-600" : "border-none"
+                    }`}
                 />
             )}
-            {!!error && <div className="text-error text-base">{error}</div>}
         </Field>
     );
 };
