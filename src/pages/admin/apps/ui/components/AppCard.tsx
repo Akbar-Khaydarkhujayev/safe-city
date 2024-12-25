@@ -5,7 +5,7 @@ import { baseUrl } from "@/config/axios";
 const AppCard = ({ app }: { app: IApp }) => {
     return (
         <div className="grid grid-cols-10 gap-4 rounded-lg">
-            <div className="col-span-2 rounded-xl  overflow-hidden">
+            <div className="col-span-2 rounded-xl overflow-hidden">
                 <img src={`${baseUrl}/img/${app?.logo}`} alt="" />
             </div>
 
@@ -19,7 +19,7 @@ const AppCard = ({ app }: { app: IApp }) => {
             </div>
             <div className="col-span-2">
                 <a
-                    href={`${baseUrl}/apk/${app?.url}`}
+                    href={`${baseUrl}/application/${app?.url}`}
                     target="_blank"
                     download
                     rel="noopener noreferrer"

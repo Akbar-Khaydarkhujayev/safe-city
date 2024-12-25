@@ -51,7 +51,7 @@ const MainPage: React.FC = () => {
                 {isReleasesSuccess && (
                     <Flicking circular moveType="strict">
                         {releases?.map((app) => (
-                            <div key={app.appId} className="w-[31%] mr-6">
+                            <div key={app.appId} className="w-[400px] mr-6">
                                 <ReleaseCard app={app} />
                             </div>
                         ))}
@@ -67,7 +67,7 @@ const MainPage: React.FC = () => {
 
             <div className="font-semibold text-2xl text-white my-6">Apps</div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-10">
                 {isAppsLoading && <AppsLoader />}
                 {isAppsSuccess &&
                     apps?.pages.map((page) =>
@@ -80,8 +80,9 @@ const MainPage: React.FC = () => {
             {isAppsSuccess && apps.pages[0].length < 1 && <NotFound />}
 
             <div ref={ref} className="w-full h-1" />
+
             {isFetchingNextPage && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-10">
                     <AppsLoader />
                 </div>
             )}

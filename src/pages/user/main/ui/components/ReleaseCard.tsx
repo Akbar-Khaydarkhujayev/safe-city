@@ -6,28 +6,28 @@ import { baseUrl } from "@/config/axios";
 const ReleaseCard = ({ app }: { app: IApp }) => {
     return (
         <div
-            className="rounded-lg flex p-6 flex-col h-64 border border-[#545458A6] bg-no-repeat bg-cover bg-center"
+            className="rounded-lg flex p-4 flex-col h-64 border border-[#545458A6] bg-no-repeat bg-cover bg-center"
             style={{
                 backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%), url(${bgImg})`,
             }}
         >
             <div className="flex-grow" />
-            <div className="grid grid-cols-10 gap-4">
-                <div className="w-[70px] h-[70px] col-span-2 rounded-xl flex justify-center items-center overflow-hidden">
+            <div className="flex justify-between">
+                <div className="w-[70px] h-[70px] rounded-xl flex justify-center items-center overflow-hidden">
                     <img src={`${baseUrl}/img/${app?.logo}`} alt="" />
                 </div>
 
-                <div className="col-span-6">
-                    <div className="text-lg font-semibold">
+                <div className="max-w-[50%] text-lg font-semibold overflow-hidden text-ellipsis">
+                    <div className="line-clamp-2">
                         {app.name} - {app.description}
                     </div>
                     <div className="text-xs font-normal text-[#818181]">
                         {app.version}
                     </div>
                 </div>
-                <div className="col-span-2 py-1">
+                <div className="py-1 w-[81px]">
                     <a
-                        href={`${baseUrl}/apk/${app?.url}`}
+                        href={`${baseUrl}/download/application/${app?.url}`}
                         target="_blank"
                         download
                         rel="noopener noreferrer"

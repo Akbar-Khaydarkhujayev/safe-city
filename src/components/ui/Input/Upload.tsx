@@ -1,5 +1,5 @@
 import { Field, Label } from "@headlessui/react";
-import React from "react";
+import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Button from "../Button";
 
@@ -16,8 +16,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
     placeholder,
     onDrop,
 }) => {
+    const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
-        onDrop,
+        onDrop: (acceptedFiles) => {
+            setSelectedFile(acceptedFiles[0]?.name || null);
+            onDrop(acceptedFiles);
+        },
     });
 
     return (
@@ -44,8 +48,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
                 }`}
             >
                 <input {...getInputProps()} />
-                <div className="text-sm font-normal text-[#FFFFFF] opacity-40 flex items-center h-full">
-                    {placeholder}
+                <div
+                    className={`text-sm font-normal text-[#FFFFFF] flex items-center h-full ${
+                        !selectedFile && "opacity-40"
+                    }`}
+                >
+                    {selectedFile || placeholder}
                 </div>
                 <Button
                     variant="secondary"

@@ -21,8 +21,8 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
                 />
             </div>
 
-            <div className="col-span-6">
-                <div className="text-lg font-semibold">
+            <div className="col-span-6 text-lg font-semibold overflow-hidden text-ellipsis">
+                <div className="line-clamp-2">
                     {app.name} - {app.description}
                 </div>
                 <div className="text-xs font-normal text-[#818181]">
@@ -32,7 +32,7 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
             {!update && (
                 <div className="col-span-2">
                     <a
-                        href={`${baseUrl}/apk/${app?.url}`}
+                        href={`${baseUrl}/application/${app?.url}`}
                         target="_blank"
                         download
                         rel="noopener noreferrer"
