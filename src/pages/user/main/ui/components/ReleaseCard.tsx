@@ -13,12 +13,8 @@ const ReleaseCard = ({ app }: { app: IApp }) => {
         >
             <div className="flex-grow" />
             <div className="grid grid-cols-10 gap-4">
-                <div className="col-span-2 rounded-xl overflow-hidden">
-                    <img
-                        src={`${baseUrl}/img/${app?.logo}`}
-                        alt=""
-                        className="pointer-events-none"
-                    />
+                <div className="w-[70px] h-[70px] col-span-2 rounded-xl flex justify-center items-center overflow-hidden">
+                    <img src={`${baseUrl}/img/${app?.logo}`} alt="" />
                 </div>
 
                 <div className="col-span-6">

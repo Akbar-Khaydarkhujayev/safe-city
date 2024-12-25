@@ -5,20 +5,20 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export const createApp = (data: FormSchemaType) =>
-    axiosInstance.post("app", data).then((res) => res.data);
+export const upgradeApp = (data: FormSchemaType) =>
+    axiosInstance.post("version", data).then((res) => res.data);
 
-export const useCreateApp = () => {
+export const useUgradeApp = () => {
     const navigate = useNavigate();
     const [loadingToastId, setLoadingToastId] = useState("");
 
     return useMutation({
-        mutationFn: createApp,
+        mutationFn: upgradeApp,
         onMutate: () => {
-            setLoadingToastId(toast.loading("Creating app..."));
+            setLoadingToastId(toast.loading("Creating new version..."));
         },
         onSuccess: () => {
-            toast.success("App created successfully", {
+            toast.success("New version created successfully", {
                 id: loadingToastId,
             });
             navigate("/");

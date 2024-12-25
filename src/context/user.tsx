@@ -18,8 +18,12 @@ const userReducer = (
 ): string | null => {
     switch (action.type) {
         case "SET_USER":
+            window.location.reload();
+            window.location.href = "/";
             return action.payload;
         case "CLEAR_USER":
+            localStorage.removeItem("token");
+            window.location.reload();
             return null;
         default:
             return state;

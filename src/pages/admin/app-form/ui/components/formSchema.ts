@@ -1,17 +1,24 @@
 import { z } from "zod";
 
-export const formSchema = z.object({
-    news: z.string().min(1, "What's new is required"),
-    name: z.string().min(1, "Name is required"),
-    type: z.string().min(1, "Required"),
-    version: z.string().min(1, "Version is required"),
-    description: z.string().min(1, "Description is required"),
-    url: z.string().min(1, "App file is required"),
-    logo: z.string().min(1, "Logo is required"),
-    platform: z.string().min(1, "Platform is required"),
-});
+export const createFormSchema = (isUpdate: boolean) => {
+    return z.object({
+        appId: isUpdate ? z.number() : z.number().optional(),
+        news: isUpdate
+            ? z.string().min(1, "News is required")
+            : z.string().optional(),
+        name: z.string().min(1, "Name is required"),
+        type: z.string().min(1, "Required"),
+        version: z.string().min(1, "Version is required"),
+        description: z.string().min(1, "Description is required"),
+        url: z.string().min(1, "App file is required"),
+        logo: z.string().min(1, "Logo is required"),
+        platform: isUpdate
+            ? z.string().optional()
+            : z.string().min(1, "Platform is required"),
+    });
+};
 
-export type FormSchemaType = z.infer<typeof formSchema>;
+export type FormSchemaType = z.infer<ReturnType<typeof createFormSchema>>;
 
 export const formDefaultValues: FormSchemaType = {
     news: "",
@@ -21,5 +28,5 @@ export const formDefaultValues: FormSchemaType = {
     description: "",
     url: "",
     logo: "",
-    platform: "android",
+    platform: "",
 };

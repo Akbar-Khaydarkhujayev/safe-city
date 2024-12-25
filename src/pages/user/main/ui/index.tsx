@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { useGetApps, useGetReleases } from "../api/getAll";
-import AppCard from "./components/AppCard";
 import Header from "./components/Header";
-import { AppsLoader, ReleasesLoader } from "./components/Loaders";
+import ReleasesLoader from "./components/ReleasesLoader";
 import ReleaseCard from "./components/ReleaseCard";
 import { useInView } from "react-intersection-observer";
 import NotFound from "@/components/ui/Feedback/NotFound";
 import Error from "@/components/ui/Feedback/Error";
 import Flicking from "@egjs/react-flicking";
 import "@egjs/react-flicking/dist/flicking.css";
+import AppCard from "@/components/ui/App/Card";
+import AppsLoader from "@/components/ui/App/Loaders";
 
 const MainPage: React.FC = () => {
     const { ref, inView } = useInView();

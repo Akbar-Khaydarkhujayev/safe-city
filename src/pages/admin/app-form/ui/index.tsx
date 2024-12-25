@@ -4,34 +4,46 @@ import DropdownMenu from "@/components/ui/DropdownMenu";
 import Input from "@/components/ui/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     formDefaultValues,
-    formSchema,
+    createFormSchema,
     FormSchemaType,
 } from "./components/formSchema";
 import { useCreateApp } from "./api/create";
 import FileUpload from "@/components/ui/Input/Upload";
 import { useUpload } from "@/api/upload";
+import { useEffect } from "react";
+import { useUgradeApp } from "./api/upgrade";
 
 export default function AdminAppFromPage() {
-    const { platform } = useParams();
+    const { platform, appId } = useParams();
+    const navigate = useNavigate();
+    const formSchema = createFormSchema(!!appId);
+
+    useEffect(() => {
+        if (!appId && !platform) navigate("/");
+    }, [appId, platform]);
 
     const { control, handleSubmit, setValue } = useForm<FormSchemaType>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             ...formDefaultValues,
             platform: platform?.toUpperCase(),
+            appId: appId ? Number(appId) : undefined,
         },
     });
 
-    const { mutate } = useCreateApp();
-    const { mutate: mutateUpload } = useUpload();
+    const { mutate: createApp, isPending: isCreationPending } = useCreateApp();
+    const { mutate: updateApp, isPending: isUpgradePending } = useUgradeApp();
+    const { mutate: mutateUpload, isPending: isUploadPending } = useUpload();
 
     const onSubmit = (data: FormSchemaType) => {
-        mutate(data);
+        if (data.appId) updateApp(data);
+        else if (data.platform) createApp(data);
+        else navigate("/");
     };
-    console.log("IOS" === platform?.toUpperCase());
+
     const handleDrop = (
         acceptedFiles: File[],
         value: "logo" | "url",
@@ -44,7 +56,6 @@ export default function AdminAppFromPage() {
             formData.append("file", file);
             mutateUpload(formData, {
                 onSuccess: (res) => {
-                    console.log(res);
                     const fileUrl = res.data;
                     setValue(value, fileUrl);
                 },
@@ -56,7 +67,7 @@ export default function AdminAppFromPage() {
         <div className="w-[85%] mx-auto">
             <div className="flex justify-between items-end my-8">
                 <div className="w-[88px] h-[52px]">
-                    <img src={logo} className="object-cover object-center" />
+                    <img src={logo} />
                 </div>
                 <div className="flex items-center">
                     <Controller
@@ -76,28 +87,32 @@ export default function AdminAppFromPage() {
                 </div>
             </div>
             <form
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(onSubmit, (err) => console.log(err))}
                 className="rounded-xl bg-[#0A0A0A] w-full p-6 pb-8"
             >
-                <div className="text-lg font-semibold">Upgrade app</div>
+                <div className="text-lg font-semibold">
+                    {appId ? "Upgrade app" : "Upload new app"}
+                </div>
                 <div className="w-full my-6 h-[1px] bg-[#141414]" />
                 <div className="grid grid-cols-2 gap-6">
-                    <div className="col-span-2">
-                        <Controller
-                            control={control}
-                            name="news"
-                            render={({ field, fieldState }) => (
-                                <Input
-                                    textarea
-                                    label="What’s new"
-                                    placeholder="Upgrade new.."
-                                    className="h-[120px]"
-                                    {...field}
-                                    error={fieldState.error?.message}
-                                />
-                            )}
-                        />
-                    </div>
+                    {!!appId && (
+                        <div className="col-span-2">
+                            <Controller
+                                control={control}
+                                name="news"
+                                render={({ field, fieldState }) => (
+                                    <Input
+                                        textarea
+                                        label="What’s new"
+                                        placeholder="Upgrade new.."
+                                        className="h-[120px]"
+                                        {...field}
+                                        error={fieldState.error?.message}
+                                    />
+                                )}
+                            />
+                        </div>
+                    )}
 
                     <Controller
                         control={control}
@@ -176,6 +191,8 @@ export default function AdminAppFromPage() {
                         border="10px"
                         size="lg"
                         className="w-[200px]"
+                        disabled={isUploadPending}
+                        isLoading={isCreationPending || isUpgradePending}
                     >
                         Preview
                     </Button>
@@ -184,6 +201,8 @@ export default function AdminAppFromPage() {
                         size="lg"
                         className="w-[200px]"
                         type="submit"
+                        disabled={isUploadPending}
+                        isLoading={isCreationPending || isUpgradePending}
                     >
                         Upload
                     </Button>

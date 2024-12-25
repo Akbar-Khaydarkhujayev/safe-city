@@ -7,9 +7,7 @@ import UserMainPage from "@/pages/user/main";
 import UserApplicationPage from "@/pages/user/application";
 import AdminMainPage from "@/pages/admin/main";
 import AdminAppFromPage from "@/pages/admin/app-form";
-// import AdminMainPage from "@/pages/admin/main";
-// import AdminMainPage2 from "@/pages/admin/main2";
-// import AdminAddAppPage from "@/pages/admin/newApp";
+import AdminAppsPage from "@/pages/admin/apps";
 
 const UserRoutes = [
     {
@@ -37,6 +35,14 @@ const AdminRoutes = [
     },
     {
         path: "/new/:platform",
+        element: <AdminAppFromPage />,
+    },
+    {
+        path: "/apps",
+        element: <AdminAppsPage />,
+    },
+    {
+        path: "/apps/:appId",
         element: <AdminAppFromPage />,
     },
 ];

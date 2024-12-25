@@ -12,6 +12,7 @@ const buttonVariants = cva(
                 secondary:
                     "bg-[#141414] hover:bg-[#1a1a1a] hover:text-gray-200 active:bg-[#0f0f0f] active:text-gray-300",
                 text: "bg-opacity-80 text-[#0A84FF] bg-transparent hover:bg-gray-900 active:bg-gray-800",
+                error: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800",
             },
             size: {
                 lg: "px-7 h-[52px] text-lg",
@@ -53,7 +54,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                     size,
                     className,
                     border,
-                })} ${fullWidth && "w-full"} ${isLoading && "opacity-50"}`}
+                })} ${fullWidth && "w-full"} ${isLoading && "opacity-50"} ${
+                    isLoading || props.disabled
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
+                }`}
                 type={props.type || "button"}
                 disabled={isLoading}
                 {...props}

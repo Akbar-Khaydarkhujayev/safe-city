@@ -12,3 +12,9 @@ body {
     font-family: "Inter", sans-serif;
     color: white;
 }
+
+img {
+    pointer-events: none;
+    object-fit: contain;
+    object-position: center;
+}

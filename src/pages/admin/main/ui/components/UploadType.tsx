@@ -1,4 +1,5 @@
 import Button from "@/components/ui/Button";
+import { useUser } from "@/context/user";
 import { useNavigate } from "react-router-dom";
 
 const types = [
@@ -8,6 +9,7 @@ const types = [
 
 export default function TypeChoice() {
     const navigate = useNavigate();
+    const { dispatch } = useUser();
 
     return (
         <>
@@ -25,6 +27,18 @@ export default function TypeChoice() {
                         {type.label}
                     </Button>
                 ))}
+                <Button
+                    border="10px"
+                    className="text-[18px] font-semibold"
+                    variant="error"
+                    onClick={() =>
+                        dispatch({
+                            type: "CLEAR_USER",
+                        })
+                    }
+                >
+                    Log out
+                </Button>
             </div>
         </>
     );

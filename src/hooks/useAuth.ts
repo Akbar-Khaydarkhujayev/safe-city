@@ -7,7 +7,7 @@ export default function useAuth() {
 
     useEffect(() => {
         setIsAuthenticated(!!token);
-    }, []);
+    }, [token]);
 
     return isAuthenticated;
 }

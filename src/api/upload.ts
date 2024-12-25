@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/config/axios";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 export const upload = (data: FormData) =>
     axiosInstance
@@ -12,13 +13,20 @@ export const upload = (data: FormData) =>
         .then((res) => res.data);
 
 export const useUpload = () => {
+    const [loadingToastId, setLoadingToastId] = useState("");
+
     return useMutation({
         mutationFn: upload,
+        onMutate: () => {
+            setLoadingToastId(toast.loading("Uploading file..."));
+        },
         onSuccess: () => {
-            toast.success("Uploaded successfully!");
+            toast.success("Uploaded successfully!", {
+                id: loadingToastId,
+            });
         },
         onError: () => {
-            toast.error("Error! Try again!");
+            toast.dismiss(loadingToastId);
         },
     });
 };

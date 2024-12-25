@@ -11,7 +11,7 @@ export default function AdminMainPage({ platform = false }: IProps) {
         <div className="flex items-center justify-center w-screen h-screen">
             <div className="w-[450px] shadow-xl p-4">
                 <div className="w-[141px] h-[84px] mx-auto">
-                    <img src={logo} className="object-cover object-center" />
+                    <img src={logo} />
                 </div>
                 {platform ? <PlatformChoice /> : <TypeChoice />}
             </div>

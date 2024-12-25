@@ -21,7 +21,7 @@ const LoginPage = () => {
                 className="w-[450px] shadow-xl p-4"
             >
                 <div className="w-[141px] h-[84px] mx-auto">
-                    <img src={logo} className="object-cover object-center" />
+                    <img src={logo} />
                 </div>
 
                 <div className="w-[60%] mx-auto text-[18px] font-normal text-center my-8">
@@ -65,7 +65,7 @@ const LoginPage = () => {
                         type="submit"
                         isLoading={isPending}
                     >
-                        Login
+                        Log in
                     </Button>
                 </div>
             </form>
