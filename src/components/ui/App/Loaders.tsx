@@ -3,7 +3,7 @@ import ContentLoader from "react-content-loader";
 export default function AppsLoader() {
     return (
         <>
-            {[...Array(8)].map((_, index) => (
+            {[...Array(3)].map((_, index) => (
                 <ContentLoader
                     backgroundColor="transparent"
                     foregroundColor="#8a8a8a"

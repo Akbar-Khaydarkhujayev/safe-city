@@ -15,7 +15,7 @@ const UserRoutes = [
         element: <UserMainPage />,
     },
     {
-        path: "/app",
+        path: "/:id",
         element: <UserApplicationPage />,
     },
     {

@@ -4,9 +4,12 @@ import { LoginFields } from "../model/loginSchema";
 import { useLoginUser } from "../model/useLoginUser";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import logo from "@/assets/logo.png";
+import logo from "/public/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+    const navigate = useNavigate();
+
     const form = useLoginForm();
     const { mutate, isPending } = useLoginUser();
 
@@ -18,9 +21,12 @@ const LoginPage = () => {
         <div className="flex items-center justify-center w-screen h-screen">
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="w-[450px] shadow-xl p-4"
+                className="w-[400px] shadow-xl p-4"
             >
-                <div className="w-[141px] h-[84px] mx-auto">
+                <div
+                    className="w-[141px] h-[84px] mx-auto"
+                    onClick={() => navigate("/")}
+                >
                     <img src={logo} />
                 </div>
 

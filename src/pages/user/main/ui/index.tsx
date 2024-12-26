@@ -40,18 +40,20 @@ const MainPage: React.FC = () => {
     }, [inView, hasNextPage, fetchNextPage]);
 
     return (
-        <div className="w-[80%] mx-auto scroll-auto">
-            <Header search={search} setSearch={setSearch} />
+        <div className="w-full">
+            <div className="w-[80%] mx-auto scroll-auto">
+                <Header search={search} setSearch={setSearch} />
 
-            <div className="font-semibold text-2xl text-white my-6">
-                Releases
+                <div className="font-semibold text-2xl text-white my-6">
+                    Releases
+                </div>
             </div>
 
-            <div className="select-none">
+            <div className="select-none w-[100%] md:w-[80%] mx-auto">
                 {isReleasesSuccess && (
                     <Flicking circular moveType="strict">
                         {releases?.map((app) => (
-                            <div key={app.appId} className="w-[400px] mr-6">
+                            <div key={app.appId} className="w-[400px] mr-3">
                                 <ReleaseCard app={app} />
                             </div>
                         ))}
@@ -59,33 +61,37 @@ const MainPage: React.FC = () => {
                 )}
             </div>
 
-            {isReleasesLoading && <ReleasesLoader />}
+            <div className="w-[80%] mx-auto scroll-auto">
+                {isReleasesLoading && <ReleasesLoader />}
 
-            {isReleasesError && <Error />}
+                {isReleasesError && <Error />}
 
-            {isReleasesSuccess && releases.length < 1 && <NotFound />}
+                {isReleasesSuccess && releases.length < 1 && <NotFound />}
 
-            <div className="font-semibold text-2xl text-white my-6">Apps</div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-10">
-                {isAppsLoading && <AppsLoader />}
-                {isAppsSuccess &&
-                    apps?.pages.map((page) =>
-                        page.map((app) => <AppCard app={app} />)
-                    )}
-            </div>
-
-            {isAppsError && <Error />}
-
-            {isAppsSuccess && apps.pages[0].length < 1 && <NotFound />}
-
-            <div ref={ref} className="w-full h-1" />
-
-            {isFetchingNextPage && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-10">
-                    <AppsLoader />
+                <div className="font-semibold text-2xl text-white my-6">
+                    Apps
                 </div>
-            )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10 mb-10">
+                    {isAppsLoading && <AppsLoader />}
+                    {isAppsSuccess &&
+                        apps?.pages.map((page) =>
+                            page.map((app) => <AppCard app={app} />)
+                        )}
+                </div>
+
+                {isAppsError && <Error />}
+
+                {isAppsSuccess && apps.pages[0].length < 1 && <NotFound />}
+
+                <div ref={ref} className="w-full h-1" />
+
+                {isFetchingNextPage && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10 mb-10">
+                        <AppsLoader />
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

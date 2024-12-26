@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.png";
+import logo from "/public/logo.png";
 import Button from "@/components/ui/Button";
 import DropdownMenu from "@/components/ui/DropdownMenu";
 import Input from "@/components/ui/Input";
@@ -16,9 +16,11 @@ import { useUpload } from "@/api/upload";
 import { useEffect, useState } from "react";
 import { useUgradeApp } from "./api/upgrade";
 import Preview from "./components/Preview";
+import useResize from "@/hooks/use-resize";
 
 export default function AdminAppFromPage() {
     const { platform, appId } = useParams();
+    const { md } = useResize();
     const navigate = useNavigate();
     const formSchema = createFormSchema(!!appId);
 
@@ -71,7 +73,10 @@ export default function AdminAppFromPage() {
     return (
         <div className="w-[85%] mx-auto">
             <div className="flex justify-between items-end my-8">
-                <div className="w-[88px] h-[52px]">
+                <div
+                    className="w-[88px] h-[52px]"
+                    onClick={() => navigate("/")}
+                >
                     <img src={logo} />
                 </div>
                 <div className="flex items-center">
@@ -122,30 +127,36 @@ export default function AdminAppFromPage() {
                             </div>
                         )}
 
-                        <Controller
-                            control={control}
-                            name="name"
-                            render={({ field, fieldState }) => (
-                                <Input
-                                    label="Name"
-                                    placeholder="Name app"
-                                    {...field}
-                                    error={fieldState.error?.message}
-                                />
-                            )}
-                        />
-                        <Controller
-                            control={control}
-                            name="version"
-                            render={({ field, fieldState }) => (
-                                <Input
-                                    label="Version"
-                                    placeholder="11.03.05"
-                                    {...field}
-                                    error={fieldState.error?.message}
-                                />
-                            )}
-                        />
+                        <div className="md:col-span-1 col-span-2">
+                            <Controller
+                                control={control}
+                                name="name"
+                                render={({ field, fieldState }) => (
+                                    <Input
+                                        label="Name"
+                                        placeholder="Name app"
+                                        {...field}
+                                        error={fieldState.error?.message}
+                                    />
+                                )}
+                            />
+                        </div>
+
+                        <div className="md:col-span-1 col-span-2">
+                            <Controller
+                                control={control}
+                                name="version"
+                                render={({ field, fieldState }) => (
+                                    <Input
+                                        label="Version"
+                                        placeholder="11.03.05"
+                                        {...field}
+                                        error={fieldState.error?.message}
+                                    />
+                                )}
+                            />
+                        </div>
+
                         <div className="col-span-2">
                             <Controller
                                 control={control}
@@ -162,47 +173,61 @@ export default function AdminAppFromPage() {
                                 )}
                             />
                         </div>
-                        <Controller
-                            control={control}
-                            name="url"
-                            render={({ field, fieldState }) => (
-                                <FileUpload
-                                    label="App file"
-                                    placeholder="Upload app file"
-                                    onDrop={(acceptedFiles) => {
-                                        field.onChange(acceptedFiles[0].name);
-                                        handleDrop(acceptedFiles, "url", "app");
-                                    }}
-                                    error={fieldState.error?.message}
-                                />
-                            )}
-                        />
-                        <Controller
-                            control={control}
-                            name="logo"
-                            render={({ field, fieldState }) => (
-                                <FileUpload
-                                    label="Logo"
-                                    placeholder="Upload logo"
-                                    onDrop={(acceptedFiles) => {
-                                        field.onChange(acceptedFiles[0].name);
-                                        handleDrop(
-                                            acceptedFiles,
-                                            "logo",
-                                            "img"
-                                        );
-                                    }}
-                                    error={fieldState.error?.message}
-                                />
-                            )}
-                        />
+
+                        <div className="md:col-span-1 col-span-2">
+                            <Controller
+                                control={control}
+                                name="url"
+                                render={({ field, fieldState }) => (
+                                    <FileUpload
+                                        label="App file"
+                                        placeholder="Upload app file"
+                                        onDrop={(acceptedFiles) => {
+                                            field.onChange(
+                                                acceptedFiles[0].name
+                                            );
+                                            handleDrop(
+                                                acceptedFiles,
+                                                "url",
+                                                "app"
+                                            );
+                                        }}
+                                        error={fieldState.error?.message}
+                                    />
+                                )}
+                            />
+                        </div>
+
+                        <div className="md:col-span-1 col-span-2">
+                            <Controller
+                                control={control}
+                                name="logo"
+                                render={({ field, fieldState }) => (
+                                    <FileUpload
+                                        label="Logo"
+                                        placeholder="Upload logo"
+                                        onDrop={(acceptedFiles) => {
+                                            field.onChange(
+                                                acceptedFiles[0].name
+                                            );
+                                            handleDrop(
+                                                acceptedFiles,
+                                                "logo",
+                                                "img"
+                                            );
+                                        }}
+                                        error={fieldState.error?.message}
+                                    />
+                                )}
+                            />
+                        </div>
                     </div>
                     <div className="flex justify-end gap-4 mt-6">
                         <Button
                             variant="secondary"
                             border="10px"
-                            size="lg"
-                            className="w-[200px]"
+                            size={md ? "md" : "lg"}
+                            className={md ? "w-[150px] text-lg" : "w-[200px]"}
                             disabled={isUploadPending}
                             isLoading={isCreationPending || isUpgradePending}
                             onClick={() => setPreview(true)}
@@ -211,8 +236,8 @@ export default function AdminAppFromPage() {
                         </Button>
                         <Button
                             border="10px"
-                            size="lg"
-                            className="w-[200px]"
+                            size={md ? "md" : "lg"}
+                            className={md ? "w-[150px] text-lg" : "w-[200px]"}
                             type="submit"
                             disabled={isUploadPending}
                             isLoading={isCreationPending || isUpgradePending}

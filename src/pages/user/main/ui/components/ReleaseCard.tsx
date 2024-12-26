@@ -2,11 +2,17 @@ import Button from "@/components/ui/Button";
 import bgImg from "./bg-img.png";
 import { IApp } from "../../api/getAll";
 import { baseUrl } from "@/config/axios";
+import { useNavigate } from "react-router-dom";
 
 const ReleaseCard = ({ app }: { app: IApp }) => {
+    const navigate = useNavigate();
+
     return (
         <div
-            className="rounded-lg flex p-4 flex-col h-64 border border-[#545458A6] bg-no-repeat bg-cover bg-center"
+            onClick={() => {
+                navigate(`${app.appId}`);
+            }}
+            className="rounded-lg flex p-4 flex-col h-64 border border-[#545458A6] bg-no-repeat bg-cover bg-center cursor-pointer"
             style={{
                 backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%), url(${bgImg})`,
             }}
@@ -27,10 +33,11 @@ const ReleaseCard = ({ app }: { app: IApp }) => {
                 </div>
                 <div className="py-1 w-[81px]">
                     <a
-                        href={`${baseUrl}/download/application/${app?.url}`}
+                        href={`${baseUrl}/application/${app?.url}`}
                         target="_blank"
                         download
                         rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
                     >
                         <Button size="sm" className="mr-0 ml-auto">
                             Download

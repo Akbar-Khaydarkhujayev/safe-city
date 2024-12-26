@@ -1,19 +1,25 @@
-import logo from "@/assets/logo.png";
+import logo from "/public/logo.png";
 import { useGetApps } from "../api/getAll";
 import AppsLoader from "@/components/ui/App/Loaders";
 import AppCard from "@/components/ui/App/Card";
 import Error from "@/components/ui/Feedback/Error";
 import NotFound from "@/components/ui/Feedback/NotFound";
 import DropdownMenu from "@/components/ui/DropdownMenu";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminAppsPage() {
+    const navigate = useNavigate();
+
     const { data, isLoading, isSuccess, isError, isFetchingNextPage } =
         useGetApps();
 
     return (
         <div className="w-[85%] mx-auto">
             <div className="flex justify-between items-end mt-10 mb-14">
-                <div className="w-[88px] h-[52px]">
+                <div
+                    className="w-[88px] h-[52px]"
+                    onClick={() => navigate("/")}
+                >
                     <img src={logo} />
                 </div>
                 <div className="flex items-center">
