@@ -1,43 +1,28 @@
 import Button from "@/components/ui/Button";
-import { Tab, TabGroup, TabList } from "@headlessui/react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetOldVersions } from "../api/getAll";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { baseUrl } from "@/config/axios";
-import AppCard from "./components/AppCard";
 import logo from "/public/logo.png";
 import useResize from "@/hooks/use-resize";
 import { useDownloadFile } from "@/hooks/useDownload";
 import dayjs from "dayjs";
+import { useGetOldVersionById } from "../api/getById";
 
-const categories = [
-    {
-        value: "release",
-        label: "Release",
-    },
-    {
-        value: "beta",
-        label: "Beta",
-    },
-];
-
-export default function UserApplicationPage() {
-    const { id, choosenType } = useParams();
+export default function OldVersionPage() {
+    const { versionId } = useParams();
     const navigate = useNavigate();
     const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
 
     useEffect(() => {
-        if (isNaN(Number(id))) {
+        if (isNaN(Number(versionId))) {
             navigate("/");
         }
-    }, [id, navigate]);
-
-    const [type, setType] = useState(choosenType ?? categories[0].value);
+    }, [versionId, navigate]);
 
     const { sm } = useResize();
 
-    const { data: app, isSuccess } = useGetOldVersions(id, type);
+    const { data: app } = useGetOldVersionById(versionId);
 
     return (
         <div className="w-[85%] mx-auto mb-8">
@@ -49,38 +34,23 @@ export default function UserApplicationPage() {
             </div>
 
             <div className="flex justify-between items-center mb-8 mt-10">
-                <Button variant="text" onClick={() => navigate("/")}>
+                <Button variant="text" onClick={() => navigate(-1)}>
                     <div className="flex items-center gap-2 pr-3 text-[17px]">
                         <IoIosArrowBack className="text-2xl" />
                         Back
                     </div>
                 </Button>
-                <TabGroup
-                    selectedIndex={categories.findIndex(
-                        (category) => category.value === type
-                    )}
-                    className="rounded-lg bg-[#7676803D] h-[42px] p-1"
-                    onChange={(index) => setType(categories[index].value)}
-                >
-                    <TabList className="flex gap-1">
-                        {categories.map(({ value, label }) => (
-                            <Tab
-                                key={value}
-                                className="w-[80px] md:w-[120px] h-[34px] rounded-[7px] py-1 px-3 text-sm/6 font-semibold text-white focus:outline-none data-[selected]:bg-[#636366] data-[hover]:bg-white/5 data-[selected]:data-[hover]:bg-white/20 data-[focus]:outline-1 data-[focus]:outline-white"
-                            >
-                                {label}
-                            </Tab>
-                        ))}
-                    </TabList>
-                </TabGroup>
             </div>
 
             <div className="flex justify-between flex-row-reverse sm:flex-row mb-8 sm:mb-12 mt-6">
                 <div className="grid gap-1 sm:gap-4">
                     <div className="font-semibold sm:font-bold text-2xl sm:text-5xl">
                         {app?.name}{" "}
-                        <span className="font-normal text-base sm:font-normal sm:text-3xl text-[#0B82FF] align-text-top sm:ml-1">
-                            {app?.type}
+                        <span className="font-normal text-sm sm:font-normal md:text-2xl text-[#0B82FF] align-text-top sm:ml-1">
+                            {app?.type.toUpperCase()}{" "}
+                            <span className="font-normal text-sm sm:font-normal md:text-2xl align-text-top sm:ml-1 text-orange-600">
+                                | OLD VERSION
+                            </span>
                         </span>
                     </div>
                     <div className="font-normal text-base sm:font-normal sm:text-xl text-[#EBEBF599]">
@@ -129,25 +99,11 @@ export default function UserApplicationPage() {
                     <div className="font-bold text-base sm:text-lg text-[#EBEBF599] mt-3">
                         Version {app?.version}
                     </div>
-                    <div className="font-normal text-lg mt-4">
+                    <div className="font-normal text-lg mt-6">
                         {app?.news ? app?.news : "-"}
                     </div>
                 </div>
             </div>
-
-            {isSuccess && app?.versions.length > 0 && (
-                <>
-                    <div className="font-semibold text-2xl text-white my-6">
-                        Apps
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-10 mb-10">
-                        {app?.versions.map((app) => (
-                            <AppCard app={app} old={true} />
-                        ))}
-                    </div>
-                </>
-            )}
         </div>
     );
 }

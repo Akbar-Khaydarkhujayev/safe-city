@@ -8,6 +8,7 @@ import UserApplicationPage from "@/pages/user/application";
 import AdminMainPage from "@/pages/admin/main";
 import AdminAppFromPage from "@/pages/admin/app-form";
 import AdminAppsPage from "@/pages/admin/apps";
+import OldVersionPage from "@/pages/user/application/ui/oldVersion";
 
 const UserRoutes = [
     {
@@ -17,6 +18,10 @@ const UserRoutes = [
     {
         path: "/:id",
         element: <UserApplicationPage />,
+    },
+    {
+        path: "/:id/:versionId",
+        element: <OldVersionPage />,
     },
     {
         path: "/login",
@@ -36,6 +41,10 @@ const AdminRoutes = [
     {
         path: "/:id",
         element: <UserApplicationPage />,
+    },
+    {
+        path: "/:id/:versionId",
+        element: <OldVersionPage />,
     },
     {
         path: "/new/:platform",

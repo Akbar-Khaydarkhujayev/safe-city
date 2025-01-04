@@ -23,6 +23,7 @@ export interface IApp {
     createdAt: string;
     updatedAt: string;
     count: number;
+    size: string;
 }
 
 const getApps = (params: IParams): Promise<IApp[]> =>

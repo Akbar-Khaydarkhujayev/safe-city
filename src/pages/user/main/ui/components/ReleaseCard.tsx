@@ -2,18 +2,17 @@ import Button from "@/components/ui/Button";
 import bgImg from "./bg-img.png";
 import { baseUrl } from "@/config/axios";
 import { useNavigate } from "react-router-dom";
-import { downloadFile } from "@/api/app/download";
+import { useDownloadFile } from "@/hooks/useDownload";
 import { IApp } from "@/api/app/getAll";
-import { useQueryClient } from "@tanstack/react-query";
 
 const ReleaseCard = ({ app }: { app: IApp }) => {
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
+    const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
 
     return (
         <div
             onClick={() => {
-                navigate(`${app.appId}`);
+                navigate(`${app.appId}/${app.type}`);
             }}
             className="rounded-lg flex p-4 flex-col h-64 border border-[#545458A6] bg-no-repeat bg-cover bg-center cursor-pointer"
             style={{
@@ -34,23 +33,21 @@ const ReleaseCard = ({ app }: { app: IApp }) => {
                         Version {app.version}
                     </div>
                     <div className="text-xs font-normal text-[#818181] mt-[3px]">
-                        Donwloaded: {app.count} time(s)
+                        Donwloaded: {app.count}{" "}
+                        {app?.count ?? 0 > 1 ? "times" : "time"}
                     </div>
                 </div>
                 <div className="py-1 w-[81px]">
                     <Button
                         size="sm"
-                        className="mr-0 ml-auto"
+                        className="mr-0 ml-auto w-full"
                         onClick={(e) => {
                             e.stopPropagation();
-                            downloadFile(app.versionId, () =>
-                                queryClient.invalidateQueries({
-                                    queryKey: ["releases"],
-                                })
-                            );
+                            handleDownload(app.versionId);
                         }}
+                        disabled={loading}
                     >
-                        Download
+                        {loadingButtonContent}
                     </Button>
                 </div>
             </div>

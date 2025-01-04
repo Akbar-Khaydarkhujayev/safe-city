@@ -53,12 +53,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                     variant,
                     size,
                     border,
-                    className,
                 })} ${fullWidth && "w-full"} ${isLoading && "opacity-50"} ${
                     isLoading || props.disabled
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
-                }`}
+                } ${className ? className : ""}`}
                 type={props.type || "button"}
                 disabled={isLoading}
                 {...props}

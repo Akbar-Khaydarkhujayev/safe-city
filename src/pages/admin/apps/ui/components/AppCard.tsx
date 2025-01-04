@@ -1,9 +1,11 @@
 import Button from "@/components/ui/Button";
 import { baseUrl } from "@/config/axios";
-import { downloadFile } from "@/api/app/download";
+import { useDownloadFile } from "@/hooks/useDownload";
 import { IApp } from "@/api/app/getAll";
 
 const AppCard = ({ app }: { app: IApp }) => {
+    const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
+
     return (
         <div className="grid grid-cols-10 gap-4 rounded-lg">
             <div className="col-span-2 rounded-xl overflow-hidden">
@@ -21,13 +23,14 @@ const AppCard = ({ app }: { app: IApp }) => {
             <div className="col-span-2">
                 <Button
                     size="sm"
-                    className="mr-0 ml-auto"
+                    className="mr-0 ml-auto w-full"
                     onClick={(e) => {
                         e.stopPropagation();
-                        if (app?.versionId) downloadFile(app.versionId);
+                        if (app?.versionId) handleDownload(app.versionId);
                     }}
+                    disabled={loading}
                 >
-                    Download
+                    {loadingButtonContent}
                 </Button>
             </div>
         </div>

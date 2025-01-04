@@ -12,7 +12,7 @@ const Header = ({ search, setSearch }: IProps) => {
 
     return (
         <div className="flex justify-between items-center mt-10">
-            <div className="w-[74px] h-[34px]" onClick={() => navigate("/")}>
+            <div className="w-[74px] h-[44px]" onClick={() => navigate("/")}>
                 <img src={logo} />
             </div>
 

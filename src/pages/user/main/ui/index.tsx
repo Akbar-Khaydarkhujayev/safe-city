@@ -46,7 +46,7 @@ const MainPage: React.FC = () => {
 
     return (
         <div className="w-full">
-            <div className="w-[80%] mx-auto scroll-auto">
+            <div className="w-[85%] mx-auto scroll-auto">
                 <Header search={search} setSearch={setSearch} />
 
                 <div className="font-semibold text-2xl text-white my-6">
@@ -54,7 +54,7 @@ const MainPage: React.FC = () => {
                 </div>
             </div>
 
-            <div className="select-none w-[100%] md:w-[80%] mx-auto">
+            <div className="select-none w-[100%] md:w-[85%] mx-auto">
                 {isReleasesSuccess && (
                     <Flicking
                         key={key}
@@ -72,7 +72,7 @@ const MainPage: React.FC = () => {
                 )}
             </div>
 
-            <div className="w-[80%] mx-auto scroll-auto">
+            <div className="w-[85%] mx-auto scroll-auto">
                 {isReleasesLoading && <ReleasesLoader />}
 
                 {isReleasesError && <Error />}
