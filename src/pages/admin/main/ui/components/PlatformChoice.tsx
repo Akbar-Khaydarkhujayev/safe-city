@@ -26,6 +26,14 @@ export default function PlatformChoice() {
                         {platform.label}
                     </Button>
                 ))}
+                <Button
+                    border="10px"
+                    className="text-[18px] font-semibold"
+                    variant="secondary"
+                    onClick={() => navigate("/")}
+                >
+                    Back
+                </Button>
             </div>
         </>
     );

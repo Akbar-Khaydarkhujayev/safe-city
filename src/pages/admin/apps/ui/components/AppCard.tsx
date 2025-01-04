@@ -1,6 +1,7 @@
 import Button from "@/components/ui/Button";
-import { IApp } from "../../api/getAll";
 import { baseUrl } from "@/config/axios";
+import { downloadFile } from "@/api/app/download";
+import { IApp } from "@/api/app/getAll";
 
 const AppCard = ({ app }: { app: IApp }) => {
     return (
@@ -18,16 +19,16 @@ const AppCard = ({ app }: { app: IApp }) => {
                 </div>
             </div>
             <div className="col-span-2">
-                <a
-                    href={`${baseUrl}/application/${app?.url}`}
-                    target="_blank"
-                    download
-                    rel="noopener noreferrer"
+                <Button
+                    size="sm"
+                    className="mr-0 ml-auto"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (app?.versionId) downloadFile(app.versionId);
+                    }}
                 >
-                    <Button size="sm" className="mr-0 ml-auto">
-                        Download
-                    </Button>
-                </a>
+                    Download
+                </Button>
             </div>
         </div>
     );

@@ -2,25 +2,13 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { axiosInstance } from "@/config/axios";
 import { useDebounce } from "@/hooks/use-debounce";
+import { IApp } from "@/api/app/getAll";
 
 interface IParams {
     search?: string;
     page?: number;
     limit?: number;
     type?: string;
-}
-
-export interface IApp {
-    appId: number;
-    name: string;
-    type: string;
-    version: string;
-    url: string;
-    logo: string;
-    description: string;
-    news: string;
-    createdAt: string;
-    updatedAt: string;
 }
 
 const getApps = (params: IParams): Promise<IApp[]> =>

@@ -3,11 +3,12 @@ import { Tab, TabGroup, TabList } from "@headlessui/react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetOldVersions } from "../api/getAll";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { baseUrl } from "@/config/axios";
 import AppCard from "./components/AppCard";
 import logo from "/public/logo.png";
 import useResize from "@/hooks/use-resize";
+import { downloadFile } from "@/api/app/download";
 
 const categories = [
     {
@@ -24,6 +25,12 @@ export default function UserApplicationPage() {
     const { id } = useParams();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (isNaN(Number(id))) {
+            navigate("/");
+        }
+    }, [id, navigate]);
+
     const [type, setType] = useState(categories[0]?.value || "");
 
     const { sm } = useResize();
@@ -31,15 +38,15 @@ export default function UserApplicationPage() {
     const { data: app, isSuccess } = useGetOldVersions(id, type);
 
     return (
-        <div className="w-[80%] mx-auto mb-8">
+        <div className="w-[85%] mx-auto mb-8">
             <div
-                className="w-[74px] h-[34px] mt-12"
+                className="w-[88px] h-[52px] mt-10 cursor-pointer"
                 onClick={() => navigate("/")}
             >
                 <img src={logo} />
             </div>
 
-            <div className="flex justify-between items-center my-6">
+            <div className="flex justify-between items-center mb-6 mt-10">
                 <Button variant="text" onClick={() => navigate("/")}>
                     <div className="flex items-center gap-2 pr-3 text-[17px]">
                         <IoIosArrowBack className="text-2xl" />
@@ -63,7 +70,7 @@ export default function UserApplicationPage() {
                 </TabGroup>
             </div>
 
-            <div className="flex justify-between flex-row-reverse sm:flex-row my-12">
+            <div className="flex justify-between flex-row-reverse sm:flex-row mb-12 mt-6">
                 <div className="grid gap-1 sm:gap-6">
                     <div className="font-semibold sm:font-bold text-2xl sm:text-5xl">
                         {app?.name}{" "}
@@ -74,19 +81,16 @@ export default function UserApplicationPage() {
                     <div className="font-normal text-base sm:font-normal sm:text-xl text-[#EBEBF599]">
                         Version {app?.version}
                     </div>
-                    <a
-                        href={`${baseUrl}/application/${app?.url}`}
-                        target="_blank"
-                        download
-                        rel="noopener noreferrer"
+                    <Button
+                        size={sm ? "sm" : "md"}
+                        className="w-[200px] font-medium text-[22px]"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (app?.versionId) downloadFile(app.versionId);
+                        }}
                     >
-                        <Button
-                            size={sm ? "sm" : "md"}
-                            className="w-[200px] font-medium text-[22px]"
-                        >
-                            Download
-                        </Button>
-                    </a>
+                        Download
+                    </Button>
                 </div>
 
                 <div className="min-w-28 min-h-28 h-28 w-28 sm:min-w-40 sm:min-h-40 sm:h-40 sm:w-40 rounded-xl flex justify-center items-center overflow-hidden">

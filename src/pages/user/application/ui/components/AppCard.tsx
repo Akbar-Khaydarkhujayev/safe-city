@@ -1,3 +1,4 @@
+import { downloadFile } from "@/api/app/download";
 import { IApp } from "@/api/app/getAll";
 import Button from "@/components/ui/Button";
 import { baseUrl } from "@/config/axios";
@@ -7,7 +8,6 @@ import { useNavigate, useParams } from "react-router-dom";
 const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
     const navigate = useNavigate();
     const { id } = useParams();
-
     const { sm } = useResize();
 
     return (
@@ -23,7 +23,7 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
                 />
             </div>
 
-            <div className="col-span-6 text-lg sm:text-2xl font-semibold overflow-hidden text-ellipsis">
+            <div className="col-span-6 w-full text-lg sm:text-2xl font-semibold overflow-hidden text-ellipsis">
                 <div className="line-clamp-2">
                     {app.name} - {app.description}
                 </div>
@@ -33,19 +33,16 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
             </div>
             {!update && (
                 <div className="col-span-2">
-                    <a
-                        href={`${baseUrl}/application/${app?.url}`}
-                        target="_blank"
-                        download
-                        rel="noopener noreferrer"
+                    <Button
+                        size={sm ? "sm" : "md"}
+                        className="mr-0 ml-auto h-[37px] text-base"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            downloadFile(app.versionId);
+                        }}
                     >
-                        <Button
-                            size={sm ? "sm" : "md"}
-                            className="mr-0 ml-auto h-[37px] text-base"
-                        >
-                            Download
-                        </Button>
-                    </a>
+                        Download
+                    </Button>
                 </div>
             )}
         </div>

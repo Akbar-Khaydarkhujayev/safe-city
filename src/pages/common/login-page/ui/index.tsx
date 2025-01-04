@@ -24,7 +24,7 @@ const LoginPage = () => {
                 className="w-[400px] shadow-xl p-4"
             >
                 <div
-                    className="w-[141px] h-[84px] mx-auto"
+                    className="w-[141px] h-[84px] mx-auto cursor-pointer"
                     onClick={() => navigate("/")}
                 >
                     <img src={logo} />

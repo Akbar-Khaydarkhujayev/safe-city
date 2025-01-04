@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGetApps, useGetReleases } from "../api/getAll";
 import Header from "./components/Header";
 import ReleasesLoader from "./components/ReleasesLoader";
@@ -13,6 +13,7 @@ import AppsLoader from "@/components/ui/App/Loaders";
 
 const MainPage: React.FC = () => {
     const { ref, inView } = useInView();
+    const [key, setKey] = useState(Date.now());
 
     const {
         data: apps,
@@ -34,6 +35,10 @@ const MainPage: React.FC = () => {
     } = useGetReleases();
 
     useEffect(() => {
+        setKey(Date.now());
+    }, [releases]);
+
+    useEffect(() => {
         if (inView && hasNextPage) {
             fetchNextPage();
         }
@@ -51,8 +56,14 @@ const MainPage: React.FC = () => {
 
             <div className="select-none w-[100%] md:w-[80%] mx-auto">
                 {isReleasesSuccess && (
-                    <Flicking circular moveType="strict">
-                        {releases?.map((app) => (
+                    <Flicking
+                        key={key}
+                        circular={true}
+                        align="0%"
+                        circularFallback="bound"
+                        moveType="strict"
+                    >
+                        {[...releases].reverse().map((app) => (
                             <div key={app.appId} className="w-[400px] mr-3">
                                 <ReleaseCard app={app} />
                             </div>
@@ -72,6 +83,10 @@ const MainPage: React.FC = () => {
                     Apps
                 </div>
 
+                {isAppsError && <Error />}
+
+                {isAppsSuccess && apps.pages[0].length < 1 && <NotFound />}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10 mb-10">
                     {isAppsLoading && <AppsLoader />}
                     {isAppsSuccess &&
@@ -79,10 +94,6 @@ const MainPage: React.FC = () => {
                             page.map((app) => <AppCard app={app} />)
                         )}
                 </div>
-
-                {isAppsError && <Error />}
-
-                {isAppsSuccess && apps.pages[0].length < 1 && <NotFound />}
 
                 <div ref={ref} className="w-full h-1" />
 

@@ -11,7 +11,7 @@ const Header = ({ search, setSearch }: IProps) => {
     const navigate = useNavigate();
 
     return (
-        <div className="flex justify-between items-center mt-12">
+        <div className="flex justify-between items-center mt-10">
             <div className="w-[74px] h-[34px]" onClick={() => navigate("/")}>
                 <img src={logo} />
             </div>

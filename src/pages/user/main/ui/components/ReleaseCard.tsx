@@ -1,11 +1,14 @@
 import Button from "@/components/ui/Button";
 import bgImg from "./bg-img.png";
-import { IApp } from "../../api/getAll";
 import { baseUrl } from "@/config/axios";
 import { useNavigate } from "react-router-dom";
+import { downloadFile } from "@/api/app/download";
+import { IApp } from "@/api/app/getAll";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ReleaseCard = ({ app }: { app: IApp }) => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     return (
         <div
@@ -24,25 +27,31 @@ const ReleaseCard = ({ app }: { app: IApp }) => {
                 </div>
 
                 <div className="max-w-[50%] text-lg font-semibold overflow-hidden text-ellipsis">
-                    <div className="line-clamp-2">
+                    <div className="line-clamp-1">
                         {app.name} - {app.description}
                     </div>
-                    <div className="text-xs font-normal text-[#818181]">
-                        {app.version}
+                    <div className="text-xs font-normal text-[#818181] mt-[3px]">
+                        Version {app.version}
+                    </div>
+                    <div className="text-xs font-normal text-[#818181] mt-[3px]">
+                        Donwloaded: {app.count} time(s)
                     </div>
                 </div>
                 <div className="py-1 w-[81px]">
-                    <a
-                        href={`${baseUrl}/application/${app?.url}`}
-                        target="_blank"
-                        download
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
+                    <Button
+                        size="sm"
+                        className="mr-0 ml-auto"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            downloadFile(app.versionId, () =>
+                                queryClient.invalidateQueries({
+                                    queryKey: ["releases"],
+                                })
+                            );
+                        }}
                     >
-                        <Button size="sm" className="mr-0 ml-auto">
-                            Download
-                        </Button>
-                    </a>
+                        Download
+                    </Button>
                 </div>
             </div>
         </div>

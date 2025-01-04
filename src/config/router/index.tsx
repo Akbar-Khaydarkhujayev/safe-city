@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import RootLayout from "../../layouts";
 import ErrorPage from "@/pages/common/error-page";
 import LoginPage from "@/pages/common/login-page";
@@ -27,22 +27,26 @@ const UserRoutes = [
 const AdminRoutes = [
     {
         index: true,
-        element: <AdminMainPage />,
+        element: <AdminAppsPage />,
     },
     {
-        path: "/new",
-        element: <AdminMainPage platform />,
+        path: "/login",
+        element: <Navigate to="/" />,
+    },
+    {
+        path: "/:id",
+        element: <UserApplicationPage />,
     },
     {
         path: "/new/:platform",
         element: <AdminAppFromPage />,
     },
     {
-        path: "/apps",
-        element: <AdminAppsPage />,
+        path: "/new",
+        element: <AdminMainPage />,
     },
     {
-        path: "/apps/:appId",
+        path: "/update/:appId",
         element: <AdminAppFromPage />,
     },
 ];

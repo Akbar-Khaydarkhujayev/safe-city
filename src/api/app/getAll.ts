@@ -15,12 +15,14 @@ export interface IApp {
     name: string;
     type: string;
     version: string;
+    versionId: number;
     url: string;
     logo: string;
     description: string;
     news: string;
     createdAt: string;
     updatedAt: string;
+    count: number;
 }
 
 const getApps = (params: IParams): Promise<IApp[]> =>
