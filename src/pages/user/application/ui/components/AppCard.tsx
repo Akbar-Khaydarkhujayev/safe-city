@@ -26,7 +26,7 @@ const AppCard = ({
             className="flex gap-4 rounded-lg cursor-pointer"
             onClick={() =>
                 old
-                    ? navigate(`/old/${app.versionId}`)
+                    ? navigate(`/${app.appId}/old/${app.versionId}`)
                     : navigate(`${app.appId}`)
             }
         >

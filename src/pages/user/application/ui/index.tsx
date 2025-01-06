@@ -3,7 +3,6 @@ import { Tab, TabGroup, TabList } from "@headlessui/react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetOldVersions } from "../api/getAll";
-import { useEffect, useState } from "react";
 import { baseUrl } from "@/config/axios";
 import AppCard from "./components/AppCard";
 import logo from "/public/logo.png";
@@ -27,17 +26,9 @@ export default function UserApplicationPage() {
     const navigate = useNavigate();
     const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
 
-    useEffect(() => {
-        if (isNaN(Number(id))) {
-            navigate("/");
-        }
-    }, [id, navigate]);
-
-    const [type, setType] = useState(choosenType ?? categories[0].value);
-
     const { sm } = useResize();
 
-    const { data: app, isSuccess } = useGetOldVersions(id, type);
+    const { data: app, isSuccess } = useGetOldVersions(id, choosenType);
 
     return (
         <div className="w-[85%] mx-auto mb-8">
@@ -57,10 +48,12 @@ export default function UserApplicationPage() {
                 </Button>
                 <TabGroup
                     selectedIndex={categories.findIndex(
-                        (category) => category.value === type
+                        (category) => category.value === choosenType
                     )}
                     className="rounded-lg bg-[#7676803D] h-[42px] p-1"
-                    onChange={(index) => setType(categories[index].value)}
+                    onChange={(index) =>
+                        navigate(`/${id}/${categories[index].value}`)
+                    }
                 >
                     <TabList className="flex gap-1">
                         {categories.map(({ value, label }) => (

@@ -16,11 +16,11 @@ const UserRoutes = [
         element: <UserMainPage />,
     },
     {
-        path: "/:id",
+        path: "/:id/:choosenType",
         element: <UserApplicationPage />,
     },
     {
-        path: "/:id/:versionId",
+        path: "/:id/old/:versionId",
         element: <OldVersionPage />,
     },
     {
@@ -39,11 +39,11 @@ const AdminRoutes = [
         element: <Navigate to="/" />,
     },
     {
-        path: "/:id",
+        path: "/:id/:choosenType",
         element: <UserApplicationPage />,
     },
     {
-        path: "/:id/:versionId",
+        path: "/:id/old/:versionId",
         element: <OldVersionPage />,
     },
     {

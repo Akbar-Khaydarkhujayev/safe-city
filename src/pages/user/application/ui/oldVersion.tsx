@@ -1,7 +1,6 @@
 import Button from "@/components/ui/Button";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
 import { baseUrl } from "@/config/axios";
 import logo from "/public/logo.png";
 import useResize from "@/hooks/use-resize";
@@ -13,12 +12,6 @@ export default function OldVersionPage() {
     const { versionId } = useParams();
     const navigate = useNavigate();
     const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
-
-    useEffect(() => {
-        if (isNaN(Number(versionId))) {
-            navigate("/");
-        }
-    }, [versionId, navigate]);
 
     const { sm } = useResize();
 
