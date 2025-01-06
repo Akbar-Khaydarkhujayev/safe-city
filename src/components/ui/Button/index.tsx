@@ -18,6 +18,7 @@ const buttonVariants = cva(
                 lg: "px-7 h-[52px] text-lg",
                 md: "px-5 h-[48px] text-2xl",
                 sm: "px-3 h-[27px] text-xs",
+                custom: "px-4 h-[32px] text-base font-medium",
             },
             border: {
                 "10px": "rounded-[10px]",

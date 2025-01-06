@@ -16,7 +16,7 @@ export default function Dropdown() {
                 {!!isAuthenticated ? (
                     <Button
                         variant="error"
-                        className="px-4 h-[32px] text-base font-normal"
+                        size="custom"
                         onClick={() => {
                             setTop("-top-9");
                             navigate("/");
@@ -29,7 +29,7 @@ export default function Dropdown() {
                     </Button>
                 ) : (
                     <Button
-                        className="px-8 h-[32px] text-base font-normal"
+                        size="custom"
                         onClick={() => {
                             setTop("-top-9");
                             navigate("/login");
