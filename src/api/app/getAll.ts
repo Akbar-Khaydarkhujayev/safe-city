@@ -11,6 +11,7 @@ interface IParams {
 }
 
 export interface IApp {
+    id: string;
     appId: number;
     name: string;
     type: string;

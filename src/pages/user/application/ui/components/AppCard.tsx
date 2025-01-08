@@ -5,6 +5,9 @@ import { baseUrl } from "@/config/axios";
 import useResize from "@/hooks/use-resize";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { useDeleteVersion } from "../../api/delete";
+import ConfirmDialog from "@/components/ui/Dialog/Confirm";
+import { useState } from "react";
 
 const AppCard = ({
     app,
@@ -15,11 +18,16 @@ const AppCard = ({
     update?: boolean;
     old?: boolean;
 }) => {
+    const [confirm, setConfirm] = useState<number | null>(null);
+
+    const token = localStorage.getItem("token");
+    console.log(!!token);
     const navigate = useNavigate();
     const { sm } = useResize();
     const { handleDownload, loadingButtonContent, loading } = useDownloadFile({
         loadingSize: sm ? 14 : 28,
     });
+    const { mutate } = useDeleteVersion();
 
     return (
         <div
@@ -54,9 +62,9 @@ const AppCard = ({
                 </div>
             </div>
             {!update && (
-                <div className="col-span-2">
+                <div className="col-span-2 space-y-1">
                     <Button
-                        size={sm ? "sm" : "md"}
+                        size="sm"
                         className="mr-0 ml-auto h-[37px] text-base w-full"
                         onClick={(e) => {
                             e.stopPropagation();
@@ -66,11 +74,35 @@ const AppCard = ({
                     >
                         {loadingButtonContent}
                     </Button>
-                    <div className="text-xs sm:text-base font-normal text-[#818181] h-full text-center mt-3">
+                    {!!token && (
+                        <Button
+                            size="sm"
+                            className="mr-0 ml-auto h-[37px] text-base w-full"
+                            variant="error"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setConfirm(app.versionId);
+                            }}
+                            disabled={loading}
+                        >
+                            Delete
+                        </Button>
+                    )}
+                    <div className="text-xs sm:text-base font-normal text-[#818181] text-center">
                         {app.size} MB
                     </div>
                 </div>
             )}
+
+            <ConfirmDialog
+                title="Delete version"
+                message="Are you sure you want delete this version?"
+                open={!!confirm}
+                onConfirm={() => {
+                    if (confirm) mutate(confirm);
+                }}
+                onCancel={() => setConfirm(null)}
+            />
         </div>
     );
 };

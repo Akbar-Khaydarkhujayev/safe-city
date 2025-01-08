@@ -21,6 +21,8 @@ import Preview from "./components/Preview";
 import useResize from "@/hooks/use-resize";
 import { IoIosArrowBack } from "react-icons/io";
 import ConfirmDialog from "@/components/ui/Dialog/Confirm";
+import { useGetAppById } from "./api/getById";
+import { baseUrl } from "@/config/axios";
 
 export default function AdminAppFromPage() {
     const { platform, appId } = useParams();
@@ -29,6 +31,8 @@ export default function AdminAppFromPage() {
 
     const [preview, setPreview] = useState(false);
     const [confirm, setConfirm] = useState(false);
+
+    const { data } = useGetAppById(appId);
 
     useEffect(() => {
         if (!appId && !platform) navigate("/");
@@ -173,10 +177,18 @@ export default function AdminAppFromPage() {
                         onSubmit={handleSubmitUpgrade(onUpgradeSubmit, (err) =>
                             console.log(err)
                         )}
-                        className="rounded-xl bg-[#0A0A0A] w-full p-6 pb-8"
+                        className="rounded-xl bg-[#0A0A0A] w-full px-6 pt-0 pb-8"
                     >
-                        <div className="text-lg font-semibold">Upgrade app</div>
-                        <div className="w-full my-6 h-[1px] bg-[#141414]" />
+                        <div className="text-lg font-semibold flex justify-between items-center">
+                            <div className="py-6">Upgrade: {data?.name}</div>
+                            <div className="h-[50px] w-[50px] rounded-xl overflow-hidden flex">
+                                <img
+                                    src={`${baseUrl}/img/${data?.logo}`}
+                                    alt=""
+                                />
+                            </div>
+                        </div>
+                        <div className="w-full h-[1px] bg-[#141414] mb-6" />
                         <div className="grid grid-cols-2 gap-6">
                             <div className="col-span-2">
                                 <Controller

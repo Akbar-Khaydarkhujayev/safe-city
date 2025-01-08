@@ -9,6 +9,10 @@ import logo from "/public/logo.png";
 import useResize from "@/hooks/use-resize";
 import { useDownloadFile } from "@/hooks/useDownload";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import ConfirmDialog from "@/components/ui/Dialog/Confirm";
+import { useDeleteVersion } from "../api/delete";
 
 const categories = [
     {
@@ -22,13 +26,24 @@ const categories = [
 ];
 
 export default function UserApplicationPage() {
+    const [confirm, setConfirm] = useState<number | null>(null);
     const { id, choosenType } = useParams();
     const navigate = useNavigate();
     const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
 
     const { sm } = useResize();
 
+    const token = localStorage.getItem("token");
+
     const { data: app, isSuccess } = useGetOldVersions(id, choosenType);
+    const { mutate } = useDeleteVersion(() => navigate("/"));
+
+    useEffect(() => {
+        if (isSuccess && !app?.appId) {
+            toast.error(`No ${choosenType} version of this app`);
+            navigate(-1);
+        }
+    }, [app]);
 
     return (
         <div className="w-[85%] mx-auto mb-8">
@@ -88,17 +103,34 @@ export default function UserApplicationPage() {
                     <div className="font-normal text-base sm:font-normal sm:text-xl text-[#EBEBF599]">
                         {app?.size} MB
                     </div>
-                    <Button
-                        size={sm ? "sm" : "md"}
-                        className="w-[200px] font-medium text-[22px] mt-4"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            if (app?.versionId) handleDownload(app.versionId);
-                        }}
-                        disabled={loading}
-                    >
-                        {loadingButtonContent}
-                    </Button>
+                    <div className="flex flex-col md:flex-row gap-2 md:gap-4">
+                        <Button
+                            size={sm ? "sm" : "md"}
+                            className="w-[200px] font-medium text-[22px]"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (app?.versionId)
+                                    handleDownload(app.versionId);
+                            }}
+                            disabled={loading}
+                        >
+                            {loadingButtonContent}
+                        </Button>
+                        {!!token && (
+                            <Button
+                                size={sm ? "sm" : "md"}
+                                className="w-[200px] font-medium text-[22px]"
+                                variant="error"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setConfirm(app?.versionId ?? 0);
+                                }}
+                                disabled={loading}
+                            >
+                                Delete
+                            </Button>
+                        )}
+                    </div>
                 </div>
 
                 <div className="min-w-28 min-h-28 h-28 w-28 sm:min-w-40 sm:min-h-40 sm:h-40 sm:w-40 rounded-xl flex justify-center items-center overflow-hidden">
@@ -127,6 +159,16 @@ export default function UserApplicationPage() {
                     </div>
                 </div>
             </div>
+
+            <ConfirmDialog
+                title="Delete version"
+                message="Are you sure you want delete this version?"
+                open={!!confirm}
+                onConfirm={() => {
+                    if (confirm) mutate(confirm);
+                }}
+                onCancel={() => setConfirm(null)}
+            />
 
             {isSuccess && app?.versions.length > 0 && (
                 <>

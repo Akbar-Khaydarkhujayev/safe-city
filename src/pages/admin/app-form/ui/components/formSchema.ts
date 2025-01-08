@@ -17,6 +17,13 @@ export const formSchema = z.object({
     news: z.string().optional(),
 });
 
+export const editFormSchema = z.object({
+    id: z.string(),
+    name: z.string().min(1, "Name is required"),
+    description: z.string().min(1, "Description is required"),
+    logo: z.string().min(1, "Logo is required"),
+});
+
 export const upgradeFormSchema = z.object({
     appId: z.number(),
     news: z.string().min(1, "News is required"),
@@ -33,6 +40,8 @@ export const upgradeFormSchema = z.object({
 export type FormSchemaType = z.infer<typeof formSchema>;
 
 export type UpgradeFormSchemaType = z.infer<typeof upgradeFormSchema>;
+
+export type EditFormSchemaType = z.infer<typeof editFormSchema>;
 
 export const formDefaultValues: FormSchemaType = {
     name: "",

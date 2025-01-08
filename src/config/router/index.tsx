@@ -9,6 +9,7 @@ import AdminMainPage from "@/pages/admin/main";
 import AdminAppFromPage from "@/pages/admin/app-form";
 import AdminAppsPage from "@/pages/admin/apps";
 import OldVersionPage from "@/pages/user/application/ui/oldVersion";
+import AdminUpdateFromPage from "@/pages/admin/app-form/ui/update";
 
 const UserRoutes = [
     {
@@ -57,6 +58,10 @@ const AdminRoutes = [
     {
         path: "/update/:appId",
         element: <AdminAppFromPage />,
+    },
+    {
+        path: "edit/:appId",
+        element: <AdminUpdateFromPage />,
     },
 ];
 

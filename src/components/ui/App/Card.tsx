@@ -4,19 +4,26 @@ import Button from "@/components/ui/Button";
 import { baseUrl } from "@/config/axios";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import ConfirmDialog from "../Dialog/Confirm";
+import { useState } from "react";
+import { useDeleteApp } from "@/pages/admin/apps/api/delete";
 
 const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
     const navigate = useNavigate();
+
+    const [confirm, setConfirm] = useState<number | null>(null);
+
     const { handleDownload, loadingButtonContent, loading } = useDownloadFile({
         loadingSize: 14,
     });
+    const { mutate } = useDeleteApp();
 
     return (
         <div
             className="flex gap-4 rounded-lg cursor-pointer"
             onClick={() => navigate(`${app.appId}/${app.type}`)}
         >
-            <div className="min-w-[75px] w-[75px] h-[75px] col-span-2 rounded-xl flex justify-center items-center overflow-hidden">
+            <div className="min-w-[93px] w-[93px] h-[93px] col-span-2 rounded-xl flex justify-center items-center overflow-hidden">
                 <img
                     src={`${baseUrl}/img/${app?.logo}`}
                     alt=""
@@ -33,6 +40,9 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
                 </div>
                 <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1">
                     {app?.count} downloads
+                </div>
+                <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1">
+                    {app.size} MB
                 </div>
                 <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1">
                     {dayjs(app?.createdAt).format("MMMM D, YYYY h:mm A")}
@@ -65,13 +75,42 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
                         size="sm"
                         className="mr-0 ml-auto mt-1 w-full"
                     >
-                        Update
+                        Upgrade
                     </Button>
-                    <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1 text-center mt-3">
-                        {app.size} MB
-                    </div>
+                    <Button
+                        variant="secondary"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`edit/${app.appId}`);
+                        }}
+                        size="sm"
+                        className="mr-0 ml-auto mt-1 w-full"
+                    >
+                        Edit
+                    </Button>
+                    <Button
+                        variant="error"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setConfirm(app.appId);
+                        }}
+                        size="sm"
+                        className="mr-0 ml-auto mt-1 w-full"
+                    >
+                        Delete
+                    </Button>
                 </div>
             )}
+
+            <ConfirmDialog
+                title="Delete Application"
+                message="Are you sure you want delete application?"
+                open={!!confirm}
+                onConfirm={() => {
+                    if (confirm) mutate(confirm);
+                }}
+                onCancel={() => setConfirm(null)}
+            />
         </div>
     );
 };
