@@ -29,9 +29,12 @@ export default function UserApplicationPage() {
     const [confirm, setConfirm] = useState<number | null>(null);
     const { id, choosenType } = useParams();
     const navigate = useNavigate();
-    const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
 
     const { sm } = useResize();
+
+    const { handleDownload, loadingButtonContent, loading } = useDownloadFile({
+        loadingSize: sm ? 14 : 28,
+    });
 
     const token = localStorage.getItem("token");
 
@@ -43,7 +46,7 @@ export default function UserApplicationPage() {
             toast.error(`No ${choosenType} version of this app`);
             navigate(-1);
         }
-    }, [app]);
+    }, [app, choosenType, isSuccess, navigate]);
 
     return (
         <div className="w-[85%] mx-auto mb-8">
@@ -103,7 +106,7 @@ export default function UserApplicationPage() {
                     <div className="font-normal text-base sm:font-normal sm:text-xl text-[#EBEBF599]">
                         {app?.size} MB
                     </div>
-                    <div className="flex flex-col md:flex-row gap-2 md:gap-4">
+                    <div className="flex flex-col md:flex-row gap-2 md:gap-4 sm:mt-0 mt-1">
                         <Button
                             size={sm ? "sm" : "md"}
                             className="w-[200px] font-medium text-[22px]"

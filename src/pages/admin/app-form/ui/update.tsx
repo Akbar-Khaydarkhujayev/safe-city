@@ -6,7 +6,6 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { editFormSchema, EditFormSchemaType } from "./components/formSchema";
 import FileUpload from "@/components/ui/Input/Upload";
-import { useUpload } from "@/api/upload";
 import { useEffect, useState } from "react";
 import useResize from "@/hooks/use-resize";
 import { IoIosArrowBack } from "react-icons/io";
@@ -14,6 +13,7 @@ import ConfirmDialog from "@/components/ui/Dialog/Confirm";
 import { useGetAppById } from "./api/getById";
 import { baseUrl } from "@/config/axios";
 import { useEditApp } from "./api/edit";
+import { useUpload } from "@/hooks/useUpload";
 
 export default function AdminUpdateFromPage() {
     const { appId } = useParams();
@@ -26,14 +26,14 @@ export default function AdminUpdateFromPage() {
 
     useEffect(() => {
         if (!appId) navigate("/");
-    }, [appId]);
+    }, [appId, navigate]);
 
     const { control, handleSubmit, setValue } = useForm<EditFormSchemaType>({
         resolver: zodResolver(editFormSchema),
     });
 
     const { mutate, isPending } = useEditApp();
-    const { mutate: mutateUpload, isPending: isUploadPending } = useUpload();
+    const { handleUpload, loading, loadingInputContent } = useUpload();
 
     const onSubmit = (data: EditFormSchemaType) => {
         mutate(data);
@@ -46,7 +46,7 @@ export default function AdminUpdateFromPage() {
             setValue("logo", data.logo);
             setValue("description", data.description);
         }
-    }, [data]);
+    }, [data, setValue]);
 
     const handleDrop = (acceptedFiles: File[], folder: string) => {
         if (acceptedFiles.length > 0) {
@@ -54,12 +54,7 @@ export default function AdminUpdateFromPage() {
             const formData = new FormData();
             formData.append("folder", folder);
             formData.append("file", file);
-            mutateUpload(formData, {
-                onSuccess: (res) => {
-                    const fileUrl = res.data;
-                    setValue("logo", fileUrl);
-                },
-            });
+            handleUpload(formData, (data: string) => setValue("logo", data));
         }
     };
 
@@ -133,6 +128,7 @@ export default function AdminUpdateFromPage() {
                                         field.onChange(acceptedFiles[0].name);
                                         handleDrop(acceptedFiles, "img");
                                     }}
+                                    inputContent={loadingInputContent}
                                     error={fieldState.error?.message}
                                 />
                             )}
@@ -162,7 +158,7 @@ export default function AdminUpdateFromPage() {
                         size={md ? "md" : "lg"}
                         className={md ? "w-[150px] text-lg" : "w-[200px]"}
                         type="submit"
-                        disabled={isUploadPending}
+                        disabled={loading}
                         isLoading={isPending}
                     >
                         Edit

@@ -26,7 +26,6 @@ export function useDownloadFile({ loadingSize = 28 }: IProps = {}) {
     const handleDownload = (id: number) => {
         setLoading(true);
         setLoadingText("Downloading...");
-        toast.loading("Downloading...", { id: "download-toast" });
 
         axiosInstance
             .get(`app/download/${id}`, {
@@ -36,9 +35,6 @@ export function useDownloadFile({ loadingSize = 28 }: IProps = {}) {
                     const current = progressEvent.loaded;
                     const percentage = Math.floor((current / total) * 100);
                     setProgress(percentage);
-                    toast.loading(`Downloading... ${percentage}%`, {
-                        id: "download-toast",
-                    });
                 },
             })
             .then((response) => {
@@ -69,7 +65,6 @@ export function useDownloadFile({ loadingSize = 28 }: IProps = {}) {
                 console.error("Download error:", error);
             })
             .finally(() => {
-                toast.dismiss("download-toast");
                 toast.success("Download completed!");
                 setLoading(false);
                 queryClient.invalidateQueries({
@@ -77,6 +72,12 @@ export function useDownloadFile({ loadingSize = 28 }: IProps = {}) {
                 });
                 queryClient.invalidateQueries({
                     queryKey: ["releases"],
+                });
+                queryClient.invalidateQueries({
+                    queryKey: ["old-versions"],
+                });
+                queryClient.invalidateQueries({
+                    queryKey: ["old-version"],
                 });
                 setLoadingText("Download");
             });

@@ -41,9 +41,11 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
                 <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1">
                     {app?.count} downloads
                 </div>
-                <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1">
-                    {app.size} MB
-                </div>
+                {!!update && (
+                    <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1">
+                        {app.size} MB
+                    </div>
+                )}
                 <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1">
                     {dayjs(app?.createdAt).format("MMMM D, YYYY h:mm A")}
                 </div>

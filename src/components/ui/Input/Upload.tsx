@@ -8,6 +8,7 @@ interface FileUploadProps {
     placeholder: string;
     error?: string;
     onDrop: (acceptedFiles: File[]) => void;
+    inputContent: React.ReactNode;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({
@@ -15,6 +16,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
     label,
     placeholder,
     onDrop,
+    inputContent,
 }) => {
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -23,6 +25,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
             onDrop(acceptedFiles);
         },
     });
+    console.log(typeof selectedFile);
 
     return (
         <Field {...getRootProps()} className="cursor-pointer">
@@ -49,18 +52,20 @@ const FileUpload: React.FC<FileUploadProps> = ({
             >
                 <input {...getInputProps()} />
                 <div
-                    className={`text-sm font-normal text-[#FFFFFF] flex items-center h-full ${
+                    className={`flex-grow text-sm font-normal text-[#FFFFFF] flex items-center h-full overflow-hidden pr-4 ${
                         !selectedFile && "opacity-40"
                     }`}
                 >
-                    {selectedFile || placeholder}
+                    <div className="overflow-hidden line-clamp-1 text-ellipsis">
+                        {selectedFile || placeholder}
+                    </div>
                 </div>
                 <Button
                     variant="secondary"
                     size="sm"
                     className="w-[160px] rounded-md"
                 >
-                    Upload
+                    {inputContent}
                 </Button>
             </div>
         </Field>

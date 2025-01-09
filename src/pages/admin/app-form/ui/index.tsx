@@ -14,7 +14,6 @@ import {
 } from "./components/formSchema";
 import { useCreateApp } from "./api/create";
 import FileUpload from "@/components/ui/Input/Upload";
-import { useUpload } from "@/api/upload";
 import { useEffect, useState } from "react";
 import { useUgradeApp } from "./api/upgrade";
 import Preview from "./components/Preview";
@@ -23,6 +22,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import ConfirmDialog from "@/components/ui/Dialog/Confirm";
 import { useGetAppById } from "./api/getById";
 import { baseUrl } from "@/config/axios";
+import { useUpload } from "@/hooks/useUpload";
 
 export default function AdminAppFromPage() {
     const { platform, appId } = useParams();
@@ -36,7 +36,7 @@ export default function AdminAppFromPage() {
 
     useEffect(() => {
         if (!appId && !platform) navigate("/");
-    }, [appId, platform]);
+    }, [appId, platform, navigate]);
 
     const { control, handleSubmit, setValue, watch } = useForm<FormSchemaType>({
         resolver: zodResolver(formSchema),
@@ -62,7 +62,16 @@ export default function AdminAppFromPage() {
 
     const { mutate: createApp, isPending: isCreationPending } = useCreateApp();
     const { mutate: updateApp, isPending: isUpgradePending } = useUgradeApp();
-    const { mutate: mutateUpload, isPending: isUploadPending } = useUpload();
+    const {
+        handleUpload: uploadApp,
+        loading: appUploadLoading,
+        loadingInputContent: appLoadingInputContent,
+    } = useUpload();
+    const {
+        handleUpload: uploadImg,
+        loading: imgUploadLoading,
+        loadingInputContent: imgLoadingInputContent,
+    } = useUpload();
 
     const onSubmit = (data: FormSchemaType) => {
         createApp(data);
@@ -72,22 +81,23 @@ export default function AdminAppFromPage() {
         updateApp(data);
     };
 
-    const handleDrop = (
-        acceptedFiles: File[],
-        value: "logo" | "url",
-        folder: string
-    ) => {
+    const handleAppDrop = (acceptedFiles: File[]) => {
         if (acceptedFiles.length > 0) {
             const file = acceptedFiles[0];
             const formData = new FormData();
-            formData.append("folder", folder);
+            formData.append("folder", "app");
             formData.append("file", file);
-            mutateUpload(formData, {
-                onSuccess: (res) => {
-                    const fileUrl = res.data;
-                    setValue(value, fileUrl);
-                },
-            });
+            uploadApp(formData, (data: string) => setValue("url", data));
+        }
+    };
+
+    const handleImgDrop = (acceptedFiles: File[]) => {
+        if (acceptedFiles.length > 0) {
+            const file = acceptedFiles[0];
+            const formData = new FormData();
+            formData.append("folder", "img");
+            formData.append("file", file);
+            uploadImg(formData, (data: string) => setValue("logo", data));
         }
     };
 
@@ -97,12 +107,7 @@ export default function AdminAppFromPage() {
             const formData = new FormData();
             formData.append("folder", "app");
             formData.append("file", file);
-            mutateUpload(formData, {
-                onSuccess: (res) => {
-                    const fileUrl = res.data;
-                    setUpgradeValue("url", fileUrl);
-                },
-            });
+            uploadApp(formData, (data: string) => setUpgradeValue("url", data));
         }
     };
 
@@ -160,7 +165,7 @@ export default function AdminAppFromPage() {
 
             {preview ? (
                 <Preview app={app} closePreview={() => setPreview(false)} />
-            ) : !!appId ? (
+            ) : appId ? (
                 <>
                     <Button
                         variant="text"
@@ -238,6 +243,9 @@ export default function AdminAppFromPage() {
                                                     acceptedFiles
                                                 );
                                             }}
+                                            inputContent={
+                                                appLoadingInputContent
+                                            }
                                             error={fieldState.error?.message}
                                         />
                                     )}
@@ -252,7 +260,7 @@ export default function AdminAppFromPage() {
                                     md ? "w-[150px] text-lg" : "w-[200px]"
                                 }
                                 type="submit"
-                                disabled={isUploadPending}
+                                disabled={appUploadLoading}
                                 isLoading={
                                     isCreationPending || isUpgradePending
                                 }
@@ -345,12 +353,11 @@ export default function AdminAppFromPage() {
                                                 field.onChange(
                                                     acceptedFiles[0].name
                                                 );
-                                                handleDrop(
-                                                    acceptedFiles,
-                                                    "url",
-                                                    "app"
-                                                );
+                                                handleAppDrop(acceptedFiles);
                                             }}
+                                            inputContent={
+                                                appLoadingInputContent
+                                            }
                                             error={fieldState.error?.message}
                                         />
                                     )}
@@ -369,12 +376,11 @@ export default function AdminAppFromPage() {
                                                 field.onChange(
                                                     acceptedFiles[0].name
                                                 );
-                                                handleDrop(
-                                                    acceptedFiles,
-                                                    "logo",
-                                                    "img"
-                                                );
+                                                handleImgDrop(acceptedFiles);
                                             }}
+                                            inputContent={
+                                                imgLoadingInputContent
+                                            }
                                             error={fieldState.error?.message}
                                         />
                                     )}
@@ -389,7 +395,7 @@ export default function AdminAppFromPage() {
                                 className={
                                     md ? "w-[150px] text-lg" : "w-[200px]"
                                 }
-                                disabled={isUploadPending}
+                                disabled={appUploadLoading || imgUploadLoading}
                                 isLoading={
                                     isCreationPending || isUpgradePending
                                 }
@@ -404,7 +410,7 @@ export default function AdminAppFromPage() {
                                     md ? "w-[150px] text-lg" : "w-[200px]"
                                 }
                                 type="submit"
-                                disabled={isUploadPending}
+                                disabled={appUploadLoading || imgUploadLoading}
                                 isLoading={
                                     isCreationPending || isUpgradePending
                                 }

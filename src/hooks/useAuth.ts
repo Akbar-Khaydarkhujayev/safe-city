@@ -11,7 +11,7 @@ export default function useAuth() {
 
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 2000);
+        }, 100);
 
         return () => clearTimeout(timer);
     }, [token]);

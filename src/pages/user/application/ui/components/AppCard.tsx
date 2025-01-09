@@ -21,11 +21,11 @@ const AppCard = ({
     const [confirm, setConfirm] = useState<number | null>(null);
 
     const token = localStorage.getItem("token");
-    console.log(!!token);
+
     const navigate = useNavigate();
     const { sm } = useResize();
     const { handleDownload, loadingButtonContent, loading } = useDownloadFile({
-        loadingSize: sm ? 14 : 28,
+        loadingSize: sm ? 14 : 20,
     });
     const { mutate } = useDeleteVersion();
 
@@ -65,7 +65,7 @@ const AppCard = ({
                 <div className="col-span-2 space-y-1">
                     <Button
                         size="sm"
-                        className="mr-0 ml-auto h-[37px] text-base w-full"
+                        className="mr-0 ml-auto sm:h-[37px] text-base w-full"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleDownload(app.versionId);
@@ -77,7 +77,7 @@ const AppCard = ({
                     {!!token && (
                         <Button
                             size="sm"
-                            className="mr-0 ml-auto h-[37px] text-base w-full"
+                            className="mr-0 ml-auto sm:h-[37px] text-base w-full"
                             variant="error"
                             onClick={(e) => {
                                 e.stopPropagation();
