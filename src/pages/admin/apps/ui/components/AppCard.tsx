@@ -4,7 +4,8 @@ import { useDownloadFile } from "@/hooks/useDownload";
 import { IApp } from "@/api/app/getAll";
 
 const AppCard = ({ app }: { app: IApp }) => {
-    const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
+    const { handleDownload, handleCancel, loadingButtonContent, loading } =
+        useDownloadFile();
 
     return (
         <div className="grid grid-cols-10 gap-4 rounded-lg">
@@ -26,9 +27,12 @@ const AppCard = ({ app }: { app: IApp }) => {
                     className="mr-0 ml-auto w-full"
                     onClick={(e) => {
                         e.stopPropagation();
-                        if (app?.versionId) handleDownload(app.versionId);
+                        if (loading) handleCancel();
+                        else {
+                            if (app?.versionId) handleDownload(app.versionId);
+                        }
                     }}
-                    disabled={loading}
+                    variant={loading ? "error" : "primary"}
                 >
                     {loadingButtonContent}
                 </Button>

@@ -33,7 +33,8 @@ export default function AdminUpdateFromPage() {
     });
 
     const { mutate, isPending } = useEditApp();
-    const { handleUpload, loading, loadingInputContent } = useUpload();
+    const { handleUpload, handleCancel, loading, loadingInputContent } =
+        useUpload();
 
     const onSubmit = (data: EditFormSchemaType) => {
         mutate(data);
@@ -128,6 +129,8 @@ export default function AdminUpdateFromPage() {
                                         field.onChange(acceptedFiles[0].name);
                                         handleDrop(acceptedFiles, "img");
                                     }}
+                                    handleCancel={handleCancel}
+                                    loading={loading}
                                     inputContent={loadingInputContent}
                                     error={fieldState.error?.message}
                                 />

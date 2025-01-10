@@ -13,9 +13,8 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
 
     const [confirm, setConfirm] = useState<number | null>(null);
 
-    const { handleDownload, loadingButtonContent, loading } = useDownloadFile({
-        loadingSize: 14,
-    });
+    const { handleDownload, handleCancel, loadingButtonContent, loading } =
+        useDownloadFile();
     const { mutate } = useDeleteApp();
 
     return (
@@ -57,9 +56,13 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
                         className="mr-0 ml-auto w-[81px]"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleDownload(app.versionId);
+                            if (loading) {
+                                handleCancel();
+                            } else {
+                                handleDownload(app.versionId);
+                            }
                         }}
-                        disabled={loading}
+                        variant={loading ? "error" : "primary"}
                     >
                         {loadingButtonContent}
                     </Button>

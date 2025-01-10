@@ -23,12 +23,17 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
+        if (axios.isCancel(error)) {
+            toast.error("Canceled!");
+            return Promise.reject(error);
+        }
         if (error.response?.status === 401) {
             localStorage.removeItem("token");
             window.location.reload();
         }
-        if (error.config.suppressErrorToast !== false)
+        if (error.config.suppressErrorToast !== false) {
             toast.error(`${error.response?.data?.message || error.message}`);
+        }
         return Promise.reject(error);
     }
 );

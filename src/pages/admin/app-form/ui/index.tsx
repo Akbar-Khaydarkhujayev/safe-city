@@ -64,11 +64,13 @@ export default function AdminAppFromPage() {
     const { mutate: updateApp, isPending: isUpgradePending } = useUgradeApp();
     const {
         handleUpload: uploadApp,
+        handleCancel: cancelAppUpload,
         loading: appUploadLoading,
         loadingInputContent: appLoadingInputContent,
     } = useUpload();
     const {
         handleUpload: uploadImg,
+        handleCancel: cancelImgUpload,
         loading: imgUploadLoading,
         loadingInputContent: imgLoadingInputContent,
     } = useUpload();
@@ -87,6 +89,7 @@ export default function AdminAppFromPage() {
             const formData = new FormData();
             formData.append("folder", "app");
             formData.append("file", file);
+            cancelAppUpload();
             uploadApp(formData, (data: string) => setValue("url", data));
         }
     };
@@ -246,6 +249,8 @@ export default function AdminAppFromPage() {
                                             inputContent={
                                                 appLoadingInputContent
                                             }
+                                            loading={appUploadLoading}
+                                            handleCancel={cancelAppUpload}
                                             error={fieldState.error?.message}
                                         />
                                     )}
@@ -358,6 +363,8 @@ export default function AdminAppFromPage() {
                                             inputContent={
                                                 appLoadingInputContent
                                             }
+                                            handleCancel={cancelAppUpload}
+                                            loading={appUploadLoading}
                                             error={fieldState.error?.message}
                                         />
                                     )}
@@ -381,6 +388,8 @@ export default function AdminAppFromPage() {
                                             inputContent={
                                                 imgLoadingInputContent
                                             }
+                                            handleCancel={cancelImgUpload}
+                                            loading={imgUploadLoading}
                                             error={fieldState.error?.message}
                                         />
                                     )}

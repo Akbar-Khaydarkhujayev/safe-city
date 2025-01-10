@@ -9,6 +9,8 @@ interface FileUploadProps {
     error?: string;
     onDrop: (acceptedFiles: File[]) => void;
     inputContent: React.ReactNode;
+    loading: boolean;
+    handleCancel: () => void;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({
@@ -17,6 +19,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
     placeholder,
     onDrop,
     inputContent,
+    loading,
+    handleCancel,
 }) => {
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -25,10 +29,13 @@ const FileUpload: React.FC<FileUploadProps> = ({
             onDrop(acceptedFiles);
         },
     });
-    console.log(typeof selectedFile);
 
     return (
-        <Field {...getRootProps()} className="cursor-pointer">
+        <Field
+            {...getRootProps()}
+            disabled={!!loading}
+            className="cursor-pointer"
+        >
             {!!label && (
                 <Label
                     onClick={open}
@@ -60,13 +67,27 @@ const FileUpload: React.FC<FileUploadProps> = ({
                         {selectedFile || placeholder}
                     </div>
                 </div>
-                <Button
-                    variant="secondary"
-                    size="sm"
-                    className="w-[160px] rounded-md"
-                >
-                    {inputContent}
-                </Button>
+                {loading ? (
+                    <Button
+                        variant="error"
+                        size="sm"
+                        className="w-[160px] rounded-md"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleCancel();
+                        }}
+                    >
+                        {inputContent}
+                    </Button>
+                ) : (
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        className="w-[160px] rounded-md"
+                    >
+                        {inputContent}
+                    </Button>
+                )}
             </div>
         </Field>
     );

@@ -6,12 +6,23 @@ import Error from "@/components/ui/Feedback/Error";
 import NotFound from "@/components/ui/Feedback/NotFound";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/ui/Button";
+import { useState } from "react";
+import { Tab, TabGroup, TabList } from "@headlessui/react";
+
+const platforms = [
+    { label: "All", value: "all" },
+    { label: "Android", value: "ANDROID" },
+    { label: "IOS", value: "IOS" },
+    { label: "Desktop", value: "DESKTOP" },
+];
 
 export default function AdminAppsPage() {
+    const [platform, setPlatform] = useState<string>("all");
+
     const navigate = useNavigate();
 
     const { data, isLoading, isSuccess, isError, isFetchingNextPage } =
-        useGetApps();
+        useGetApps(platform !== "all" ? platform : undefined);
 
     return (
         <div className="w-[85%] mx-auto">
@@ -22,7 +33,27 @@ export default function AdminAppsPage() {
                 >
                     <img src={logo} />
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center gap-4">
+                    <TabGroup
+                        selectedIndex={platforms.findIndex(
+                            (item) => item.value === platform
+                        )}
+                        className="rounded-lg bg-[#7676803D] h-[48px] p-[6px]"
+                        onChange={(index) =>
+                            setPlatform(platforms[index].value)
+                        }
+                    >
+                        <TabList className="flex gap-1">
+                            {platforms.map(({ value, label }) => (
+                                <Tab
+                                    key={value}
+                                    className="w-[80px] md:w-[120px] h-[36px] rounded-[7px] py-1 px-3 text-sm/6 font-semibold text-white focus:outline-none data-[selected]:bg-[#636366] data-[hover]:bg-white/5 data-[selected]:data-[hover]:bg-white/20 data-[focus]:outline-1 data-[focus]:outline-white"
+                                >
+                                    {label}
+                                </Tab>
+                            ))}
+                        </TabList>
+                    </TabGroup>
                     <Button
                         className="h-9 rounded-md text-sm/6 font-semibold"
                         onClick={() => navigate("/new")}

@@ -1,23 +1,18 @@
 import { axiosInstance } from "@/config/axios";
 import { useQueryClient } from "@tanstack/react-query";
-import Loading from "@/components/Loading";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-interface IProps {
-    loadingSize?: number;
-}
-
-export function useDownloadFile({ loadingSize = 28 }: IProps = {}) {
+export function useDownloadFile() {
     const queryClient = useQueryClient();
     const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("Download");
+    const abortControllerRef = useRef<AbortController | null>(null);
 
     const loadingButtonContent = loading ? (
         <div className="flex items-center justify-center gap-2">
-            <Loading size={loadingSize} />
-            <span>{progress}%</span>
+            Cancel: {progress}%
         </div>
     ) : (
         loadingText
@@ -26,10 +21,12 @@ export function useDownloadFile({ loadingSize = 28 }: IProps = {}) {
     const handleDownload = (id: number) => {
         setLoading(true);
         setLoadingText("Downloading...");
+        abortControllerRef.current = new AbortController();
 
         axiosInstance
             .get(`app/download/${id}`, {
                 responseType: "blob",
+                signal: abortControllerRef.current.signal,
                 onDownloadProgress: (progressEvent) => {
                     const total = progressEvent.total || 1;
                     const current = progressEvent.loaded;
@@ -59,13 +56,12 @@ export function useDownloadFile({ loadingSize = 28 }: IProps = {}) {
                 document.body.appendChild(link);
                 link.click();
                 link.remove();
+                toast.success("Download completed!");
             })
             .catch((error) => {
-                toast.error("Download failed!");
-                console.error("Download error:", error);
+                console.error(error.message);
             })
             .finally(() => {
-                toast.success("Download completed!");
                 setLoading(false);
                 queryClient.invalidateQueries({
                     queryKey: ["apps"],
@@ -83,5 +79,14 @@ export function useDownloadFile({ loadingSize = 28 }: IProps = {}) {
             });
     };
 
-    return { handleDownload, loadingButtonContent, loading };
+    const handleCancel = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            setLoading(false);
+            setLoadingText("Download");
+            setProgress(0);
+        }
+    };
+
+    return { handleDownload, handleCancel, loadingButtonContent, loading };
 }

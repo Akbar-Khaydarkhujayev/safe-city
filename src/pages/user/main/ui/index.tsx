@@ -10,9 +10,18 @@ import Flicking from "@egjs/react-flicking";
 import "@egjs/react-flicking/dist/flicking.css";
 import AppCard from "@/components/ui/App/Card";
 import AppsLoader from "@/components/ui/App/Loaders";
+import { Tab, TabGroup, TabList } from "@headlessui/react";
+
+const platforms = [
+    { label: "All", value: "all" },
+    { label: "Android", value: "ANDROID" },
+    { label: "IOS", value: "IOS" },
+    { label: "Desktop", value: "DESKTOP" },
+];
 
 const MainPage: React.FC = () => {
     const { ref, inView } = useInView();
+    const [platform, setPlatform] = useState<string>("all");
     const [key, setKey] = useState(Date.now());
 
     const {
@@ -25,7 +34,7 @@ const MainPage: React.FC = () => {
         hasNextPage,
         fetchNextPage,
         isFetchingNextPage,
-    } = useGetApps();
+    } = useGetApps(platform !== "all" ? platform : undefined);
 
     const {
         data: releases,
@@ -48,6 +57,29 @@ const MainPage: React.FC = () => {
         <div className="w-full">
             <div className="w-[85%] mx-auto scroll-auto">
                 <Header search={search} setSearch={setSearch} />
+
+                <div className="flex justify-end items-center mt-4">
+                    <TabGroup
+                        selectedIndex={platforms.findIndex(
+                            (item) => item.value === platform
+                        )}
+                        className="rounded-lg bg-[#7676803D] h-[48px] p-[6px]"
+                        onChange={(index) =>
+                            setPlatform(platforms[index].value)
+                        }
+                    >
+                        <TabList className="flex gap-1">
+                            {platforms.map(({ value, label }) => (
+                                <Tab
+                                    key={value}
+                                    className="w-[70px] sm:w-[80px] md:w-[120px] h-[36px] rounded-[7px] py-1 px-3 text-xs/6 sm:text-sm/6 font-semibold text-white focus:outline-none data-[selected]:bg-[#636366] data-[hover]:bg-white/5 data-[selected]:data-[hover]:bg-white/20 data-[focus]:outline-1 data-[focus]:outline-white"
+                                >
+                                    {label}
+                                </Tab>
+                            ))}
+                        </TabList>
+                    </TabGroup>
+                </div>
 
                 <div className="font-semibold text-2xl text-white my-6">
                     Releases

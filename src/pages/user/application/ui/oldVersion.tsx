@@ -11,7 +11,8 @@ import { useGetOldVersionById } from "../api/getById";
 export default function OldVersionPage() {
     const { versionId } = useParams();
     const navigate = useNavigate();
-    const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
+    const { handleDownload, handleCancel, loadingButtonContent, loading } =
+        useDownloadFile();
 
     const { sm } = useResize();
 
@@ -46,6 +47,9 @@ export default function OldVersionPage() {
                             </span>
                         </span>
                     </div>
+                    <div className="font-normal text-base sm:font-normal sm:text-xl text-[#0B82FF]">
+                        For {app?.platform}
+                    </div>
                     <div className="font-normal text-base sm:font-normal sm:text-xl text-[#EBEBF599]">
                         Version {app?.version}
                     </div>
@@ -63,9 +67,13 @@ export default function OldVersionPage() {
                         className="w-[200px] font-medium text-[22px] mt-4"
                         onClick={(e) => {
                             e.stopPropagation();
-                            if (app?.versionId) handleDownload(app.versionId);
+                            if (loading) handleCancel();
+                            else {
+                                if (app?.versionId)
+                                    handleDownload(app.versionId);
+                            }
                         }}
-                        disabled={loading}
+                        variant={loading ? "error" : "primary"}
                     >
                         {loadingButtonContent}
                     </Button>

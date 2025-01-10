@@ -25,6 +25,7 @@ export interface IApp {
     updatedAt: string;
     count: number;
     size: string;
+    platform: string;
 }
 
 const getApps = (params: IParams): Promise<IApp[]> =>

@@ -2,7 +2,6 @@ import { useDownloadFile } from "@/hooks/useDownload";
 import { IApp } from "@/api/app/getAll";
 import Button from "@/components/ui/Button";
 import { baseUrl } from "@/config/axios";
-import useResize from "@/hooks/use-resize";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useDeleteVersion } from "../../api/delete";
@@ -23,10 +22,8 @@ const AppCard = ({
     const token = localStorage.getItem("token");
 
     const navigate = useNavigate();
-    const { sm } = useResize();
-    const { handleDownload, loadingButtonContent, loading } = useDownloadFile({
-        loadingSize: sm ? 14 : 20,
-    });
+    const { handleDownload, handleCancel, loadingButtonContent, loading } =
+        useDownloadFile();
     const { mutate } = useDeleteVersion();
 
     return (
@@ -68,9 +65,10 @@ const AppCard = ({
                         className="mr-0 ml-auto sm:h-[37px] text-base w-full"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleDownload(app.versionId);
+                            if (loading) handleCancel();
+                            else handleDownload(app.versionId);
                         }}
-                        disabled={loading}
+                        variant={loading ? "error" : "primary"}
                     >
                         {loadingButtonContent}
                     </Button>

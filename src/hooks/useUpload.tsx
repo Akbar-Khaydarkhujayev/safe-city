@@ -1,21 +1,16 @@
 import { axiosInstance } from "@/config/axios";
-import Loading from "@/components/Loading";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-interface IProps {
-    loadingSize?: number;
-}
-
-export function useUpload({ loadingSize = 16 }: IProps = {}) {
+export function useUpload() {
     const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("Upload");
+    const abortControllerRef = useRef<AbortController | null>(null);
 
     const loadingInputContent = loading ? (
-        <div className="flex items-center justify-center gap-2">
-            <Loading size={loadingSize} />
-            <span>{progress}%</span>
+        <div className="flex items-center justify-center">
+            Cancel: {progress}%
         </div>
     ) : (
         loadingText
@@ -27,12 +22,14 @@ export function useUpload({ loadingSize = 16 }: IProps = {}) {
     ) => {
         setLoading(true);
         setLoadingText("Uploading...");
+        abortControllerRef.current = new AbortController();
 
         axiosInstance
             .post("upload", data, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
+                signal: abortControllerRef.current.signal,
                 onUploadProgress: (progressEvent) => {
                     const total = progressEvent.total || 1;
                     const current = progressEvent.loaded;
@@ -45,7 +42,7 @@ export function useUpload({ loadingSize = 16 }: IProps = {}) {
                 toast.success("Uploaded successfully!");
             })
             .catch((error) => {
-                toast.error(error.message);
+                console.error(error.message);
             })
             .finally(() => {
                 setLoading(false);
@@ -53,5 +50,14 @@ export function useUpload({ loadingSize = 16 }: IProps = {}) {
             });
     };
 
-    return { handleUpload, loadingInputContent, loading };
+    const handleCancel = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            setLoading(false);
+            setLoadingText("Upload");
+            setProgress(0);
+        }
+    };
+
+    return { handleUpload, handleCancel, loadingInputContent, loading };
 }

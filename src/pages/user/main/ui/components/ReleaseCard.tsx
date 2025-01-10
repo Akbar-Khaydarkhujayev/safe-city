@@ -7,7 +7,8 @@ import { IApp } from "@/api/app/getAll";
 
 const ReleaseCard = ({ app }: { app: IApp }) => {
     const navigate = useNavigate();
-    const { handleDownload, loadingButtonContent, loading } = useDownloadFile();
+    const { handleDownload, handleCancel, loadingButtonContent, loading } =
+        useDownloadFile();
 
     return (
         <div
@@ -43,9 +44,10 @@ const ReleaseCard = ({ app }: { app: IApp }) => {
                         className="mr-0 ml-auto w-full"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleDownload(app.versionId);
+                            if (loading) handleCancel();
+                            else handleDownload(app.versionId);
                         }}
-                        disabled={loading}
+                        variant={loading ? "error" : "primary"}
                     >
                         {loadingButtonContent}
                     </Button>

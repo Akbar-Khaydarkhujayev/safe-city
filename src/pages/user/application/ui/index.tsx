@@ -32,9 +32,8 @@ export default function UserApplicationPage() {
 
     const { sm } = useResize();
 
-    const { handleDownload, loadingButtonContent, loading } = useDownloadFile({
-        loadingSize: sm ? 14 : 28,
-    });
+    const { handleDownload, handleCancel, loadingButtonContent, loading } =
+        useDownloadFile();
 
     const token = localStorage.getItem("token");
 
@@ -94,6 +93,9 @@ export default function UserApplicationPage() {
                             {app?.type}
                         </span>
                     </div>
+                    <div className="font-normal text-base sm:font-normal sm:text-xl text-[#0B82FF]">
+                        For {app?.platform}
+                    </div>
                     <div className="font-normal text-base sm:font-normal sm:text-xl text-[#EBEBF599]">
                         Version {app?.version}
                     </div>
@@ -112,10 +114,14 @@ export default function UserApplicationPage() {
                             className="w-[200px] font-medium text-[22px]"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                if (app?.versionId)
-                                    handleDownload(app.versionId);
+                                if (loading) {
+                                    handleCancel();
+                                } else {
+                                    if (app?.versionId)
+                                        handleDownload(app.versionId);
+                                }
                             }}
-                            disabled={loading}
+                            variant={loading ? "error" : "primary"}
                         >
                             {loadingButtonContent}
                         </Button>
