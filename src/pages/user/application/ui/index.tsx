@@ -14,17 +14,6 @@ import toast from "react-hot-toast";
 import ConfirmDialog from "@/components/ui/Dialog/Confirm";
 import { useDeleteVersion } from "../api/delete";
 
-const categories = [
-    {
-        value: "release",
-        label: "Release",
-    },
-    {
-        value: "beta",
-        label: "Beta",
-    },
-];
-
 export default function UserApplicationPage() {
     const [confirm, setConfirm] = useState<number | null>(null);
     const { id, choosenType } = useParams();
@@ -64,21 +53,21 @@ export default function UserApplicationPage() {
                     </div>
                 </Button>
                 <TabGroup
-                    selectedIndex={categories.findIndex(
+                    selectedIndex={app?.categories?.findIndex(
                         (category) => category.value === choosenType
                     )}
                     className="rounded-lg bg-[#7676803D] h-[42px] p-1"
                     onChange={(index) =>
-                        navigate(`/${id}/${categories[index].value}`)
+                        navigate(`/${id}/${app?.categories?.[index].value}`)
                     }
                 >
                     <TabList className="flex gap-1">
-                        {categories.map(({ value, label }) => (
+                        {app?.categories?.map(({ value, label, count }) => (
                             <Tab
                                 key={value}
                                 className="w-[80px] md:w-[120px] h-[34px] rounded-[7px] py-1 px-3 text-sm/6 font-semibold text-white focus:outline-none data-[selected]:bg-[#636366] data-[hover]:bg-white/5 data-[selected]:data-[hover]:bg-white/20 data-[focus]:outline-1 data-[focus]:outline-white"
                             >
-                                {label}
+                                {label}: {count}
                             </Tab>
                         ))}
                     </TabList>
@@ -186,8 +175,8 @@ export default function UserApplicationPage() {
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-10 mb-10">
-                        {app?.versions.map((app) => (
-                            <AppCard app={app} old={true} />
+                        {app?.versions.map((app, index) => (
+                            <AppCard key={index} app={app} old={true} />
                         ))}
                     </div>
                 </>

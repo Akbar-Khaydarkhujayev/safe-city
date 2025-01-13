@@ -7,7 +7,17 @@ import NotFound from "@/components/ui/Feedback/NotFound";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/ui/Button";
 import { useState } from "react";
-import { Tab, TabGroup, TabList } from "@headlessui/react";
+import {
+    Popover,
+    PopoverButton,
+    PopoverPanel,
+    Tab,
+    TabGroup,
+    TabList,
+} from "@headlessui/react";
+import { HiOutlineUserCircle } from "react-icons/hi2";
+import { useUser } from "@/context/user";
+import useResize from "@/hooks/use-resize";
 
 const platforms = [
     { label: "All", value: "all" },
@@ -18,8 +28,9 @@ const platforms = [
 
 export default function AdminAppsPage() {
     const [platform, setPlatform] = useState<string>("all");
-
     const navigate = useNavigate();
+    const { dispatch } = useUser();
+    const { lg } = useResize();
 
     const { data, isLoading, isSuccess, isError, isFetchingNextPage } =
         useGetApps(platform !== "all" ? platform : undefined);
@@ -28,17 +39,85 @@ export default function AdminAppsPage() {
         <div className="w-[85%] mx-auto">
             <div className="flex justify-between items-end mt-10">
                 <div
-                    className="w-[88px] h-[52px] cursor-pointer"
+                    className="w-[74px] h-[44px] mb-2 cursor-pointer"
                     onClick={() => navigate("/")}
                 >
                     <img src={logo} />
                 </div>
                 <div className="flex items-center gap-4">
+                    {!lg && (
+                        <TabGroup
+                            selectedIndex={platforms.findIndex(
+                                (item) => item.value === platform
+                            )}
+                            className="rounded-lg bg-[#7676803D] h-[48px] p-[6px]"
+                            onChange={(index) =>
+                                setPlatform(platforms[index].value)
+                            }
+                        >
+                            <TabList className="flex gap-1">
+                                {platforms.map(({ value, label }) => (
+                                    <Tab
+                                        key={value}
+                                        className="w-[120px] h-[36px] rounded-[7px] py-1 px-3 text-sm/6 font-semibold text-white focus:outline-none data-[selected]:bg-[#636366] data-[hover]:bg-white/5 data-[selected]:data-[hover]:bg-white/20 data-[focus]:outline-1 data-[focus]:outline-white"
+                                    >
+                                        {label}
+                                    </Tab>
+                                ))}
+                            </TabList>
+                        </TabGroup>
+                    )}
+                    <Popover>
+                        {({ open }) => (
+                            <div className="flex gap-4">
+                                {(!lg || (lg && !open)) && (
+                                    <Button
+                                        className="rounded-md text-sm/6 font-semibold"
+                                        onClick={() => navigate("/new")}
+                                    >
+                                        Create new
+                                    </Button>
+                                )}
+                                <PopoverButton className="block text-sm/6 font-semibold text-white/50 focus:outline-none data-[active]:text-white data-[hover]:text-white data-[focus]:outline-1 data-[focus]:outline-white">
+                                    <HiOutlineUserCircle className="w-12 h-12 bg-[#1B1B1B] rounded-full text-[#3D3D3D]" />
+                                </PopoverButton>
+                                <PopoverPanel
+                                    transition
+                                    anchor={
+                                        lg
+                                            ? { to: "left", gap: "4px" }
+                                            : { to: "bottom end", gap: "4px" }
+                                    }
+                                    className="divide-y divide-white/5 rounded-xl bg-white/5 text-sm/6 transition duration-200 ease-in-out [--anchor-gap:var(--spacing-5)] data-[closed]:-translate-y-1 data-[closed]:opacity-0"
+                                >
+                                    <div className="p-[6px]">
+                                        <Button
+                                            variant="text"
+                                            size="custom"
+                                            className="rounded-[8px]"
+                                            onClick={() =>
+                                                dispatch({
+                                                    type: "CLEAR_USER",
+                                                })
+                                            }
+                                        >
+                                            Log out
+                                        </Button>
+                                    </div>
+                                </PopoverPanel>
+                            </div>
+                        )}
+                    </Popover>
+                </div>
+            </div>
+
+            <div className="w-full mt-4">
+                {lg && (
                     <TabGroup
                         selectedIndex={platforms.findIndex(
                             (item) => item.value === platform
                         )}
-                        className="rounded-lg bg-[#7676803D] h-[48px] p-[6px]"
+                        className="rounded-lg bg-[#7676803D] w-full h-[44px] p-[6px]"
                         onChange={(index) =>
                             setPlatform(platforms[index].value)
                         }
@@ -47,20 +126,14 @@ export default function AdminAppsPage() {
                             {platforms.map(({ value, label }) => (
                                 <Tab
                                     key={value}
-                                    className="w-[80px] md:w-[120px] h-[36px] rounded-[7px] py-1 px-3 text-sm/6 font-semibold text-white focus:outline-none data-[selected]:bg-[#636366] data-[hover]:bg-white/5 data-[selected]:data-[hover]:bg-white/20 data-[focus]:outline-1 data-[focus]:outline-white"
+                                    className=" w-full rounded-[7px] py-1 px-3 text-sm/6 font-semibold text-white focus:outline-none data-[selected]:bg-[#636366] data-[hover]:bg-white/5 data-[selected]:data-[hover]:bg-white/20 data-[focus]:outline-1 data-[focus]:outline-white"
                                 >
                                     {label}
                                 </Tab>
                             ))}
                         </TabList>
                     </TabGroup>
-                    <Button
-                        className="h-9 rounded-md text-sm/6 font-semibold"
-                        onClick={() => navigate("/new")}
-                    >
-                        Create new
-                    </Button>
-                </div>
+                )}
             </div>
 
             <div className="font-normal text-lg text-white mt-6 mb-8">

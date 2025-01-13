@@ -26,6 +26,11 @@ export interface IApp {
     count: number;
     size: string;
     platform: string;
+    categories?: {
+        value: string;
+        label: string;
+        count: number;
+    }[];
 }
 
 const getApps = (params: IParams): Promise<IApp[]> =>

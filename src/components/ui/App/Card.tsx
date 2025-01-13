@@ -19,7 +19,7 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
 
     return (
         <div
-            className="flex gap-4 rounded-lg cursor-pointer"
+            className="flex gap-4 rounded-lg cursor-pointer items-center"
             onClick={() => navigate(`${app.appId}/${app.type}`)}
         >
             <div className="min-w-[93px] w-[93px] h-[93px] col-span-2 rounded-xl flex justify-center items-center overflow-hidden">
@@ -47,6 +47,9 @@ const AppCard = ({ app, update = false }: { app: IApp; update?: boolean }) => {
                 )}
                 <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1">
                     {dayjs(app?.createdAt).format("MMMM D, YYYY h:mm A")}
+                </div>
+                <div className="text-xs font-normal text-[#818181] text-ellipsis line-clamp-1">
+                    {app?.platform}
                 </div>
             </div>
             {!update ? (

@@ -36,11 +36,11 @@ export default function OldVersionPage() {
                 </Button>
             </div>
 
-            <div className="flex justify-between flex-row-reverse sm:flex-row mb-8 sm:mb-12 mt-6">
+            <div className="flex justify-between flex-row-reverse sm:flex-row mb-8 sm:mb-12 mt-6 gap-2">
                 <div className="grid gap-1 sm:gap-4">
                     <div className="font-semibold sm:font-bold text-2xl sm:text-5xl">
                         {app?.name}{" "}
-                        <span className="font-normal text-sm sm:font-normal md:text-2xl text-[#0B82FF] align-text-top sm:ml-1">
+                        <span className="block sm:inline font-normal text-sm sm:font-normal md:text-2xl text-[#0B82FF] align-text-top sm:ml-1">
                             {app?.type.toUpperCase()}{" "}
                             <span className="font-normal text-sm sm:font-normal md:text-2xl align-text-top sm:ml-1 text-orange-600">
                                 | OLD VERSION

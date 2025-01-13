@@ -1,11 +1,5 @@
-import Dropdown from "@/components/ui/Dropdown";
 import { Outlet } from "react-router-dom";
 
-const RootLayout = () => (
-    <>
-        <Dropdown />
-        <Outlet />
-    </>
-);
+const RootLayout = () => <Outlet />;
 
 export default RootLayout;

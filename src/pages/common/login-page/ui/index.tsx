@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import logo from "/public/logo.png";
 import { useNavigate } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -18,7 +19,17 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="flex items-center justify-center w-screen h-screen">
+        <div className="flex items-center justify-center w-screen h-screen relative">
+            <Button
+                variant="text"
+                onClick={() => navigate("/")}
+                className="absolute top-4 sm:top-16 left-4 sm:left-40"
+            >
+                <div className="flex items-center gap-2 pr-3 text-[17px]">
+                    <IoIosArrowBack className="text-2xl" />
+                    Back
+                </div>
+            </Button>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="w-[400px] shadow-xl p-4"
