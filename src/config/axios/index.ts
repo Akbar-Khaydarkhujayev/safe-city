@@ -4,12 +4,12 @@ import toast from "react-hot-toast";
 export const baseUrl =
     import.meta.env.MODE === "development"
         ? import.meta.env.VITE_DEV_API_URL
-        : import.meta.env.VITE_PROD_API_URL;
+        : window.location.origin;
 
 export const socketBaseUrl =
     import.meta.env.MODE === "development"
         ? import.meta.env.VITE_DEV_API_URL
-        : import.meta.env.VITE_PROD_SOCKET_URL;
+        : window.location.origin.replace("http", "ws");
 
 export const axiosInstance = axios.create({
     baseURL: `${baseUrl}/`,
