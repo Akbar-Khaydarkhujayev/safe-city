@@ -12,7 +12,7 @@ export const socketBaseUrl =
         : window.location.origin.replace("http", "ws");
 
 export const axiosInstance = axios.create({
-    baseURL: `${baseUrl}/`,
+    baseURL: `${baseUrl}/api/`,
     headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
